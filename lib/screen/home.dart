@@ -20,15 +20,27 @@ class HomeRoute extends StatelessWidget {
               Text(AppLocalizations.of(context)!.hello),
               ElevatedButton(
                 onPressed: () {
-                  context.router.replaceNamed('/login');
+                  context.router.replaceNamed('/signin');
                 },
-                child: Text("Go to Login"),
+                child: Text("Go to Sign In"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  context.router.replaceNamed('/page0');
+                },
+                child: Text("Go to Main Home"),
               ),
               ElevatedButton(
                 onPressed: () {
                   context.router.replaceNamed('/example');
                 },
                 child: Text("Example"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  context.router.replaceNamed('/signup');
+                },
+                child: Text("Go to Sign Up"),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -41,7 +53,7 @@ class HomeRoute extends StatelessWidget {
                   MyApp.setLocale(context, Locale('en'));
                 },
                 child: Text("Change language english"),
-              )
+              ),
             ],
           ),
         ),
