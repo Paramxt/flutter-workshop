@@ -40,19 +40,3 @@ class _EquipmentSwitchState extends State<EquipmentSwitch> {
   }
 }
 
-class Equipment {
-  late final String name;
-  bool isSelected = false;
-
-  Equipment(
-    this.name,
-  );
-}
-
-List Equipments = [
-  Equipment(' Light'),
-  Equipment(' Servo Motor'),
-  Equipment(' Stepper Motor'),
-  Equipment(' Webcam'),
-  Equipment(' Sensor'),
-];

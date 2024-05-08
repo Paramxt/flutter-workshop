@@ -23,6 +23,7 @@ class _LoginPageState extends State<Login2Page> {
   final _passwordController = TextEditingController();
   String? _errorMessage;
   bool isSelected = false;
+  final _Heightbox = 60.0;
 
   @override
   void dispose() {
@@ -37,59 +38,85 @@ class _LoginPageState extends State<Login2Page> {
     });
   }
 
+  Future<void> _login() async {
+    print('Sign In');
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _errorMessage = null;
+      });
+
+      final String hashedPassword = hashPassword(_passwordController.text);
+      //เพิ่มความปลอดภัยหใ้กับรหัสผ่าน
+      if (_usernameController.text == 'admin' &&
+          hashedPassword == 'hashed_1234') {
+        await Future.delayed(Duration(seconds: 5));
+        context.router.replaceNamed('/homescreen');
+      } else {
+        setState(() {
+          _errorMessage = AppLocalizations.of(context)!.inva;
+        });
+      }
+    }
+  }
+
+  String hashPassword(String password) {
+    return 'hashed_$password';
+  }
+
   @override
   Widget build(BuildContext context) {
-    final _Heightbox = 60.0;
     return Scaffold(
       backgroundColor: whiteColor,
-      appBar: AppBar(
-        title: Text(
-          " " + AppLocalizations.of(context)!.signin,
-          style: TextStyle(
-            fontSize: 40,
-            color: FontColor2,
-          ),
-        ),
-        actions: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(right: 35),
-            child: DropdownButton<Language>(
-              underline: const SizedBox(),
-              icon: const Icon(
-                Icons.language,
-                color: FontColor2,
-              ),
-              onChanged: (Language? language) async {
-                if (language != null) {
-                  Locale _locale = await setLocale(language.languageCode);
-                  MyApp.setLocale(context, _locale);
-                }
-              },
-              items: Language.languageList()
-                  .map<DropdownMenuItem<Language>>(
-                    (e) => DropdownMenuItem<Language>(
-                      value: e,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          Text(
-                            e.name,
-                            style: const TextStyle(fontSize: 15),
-                          )
-                        ],
-                      ),
-                    ),
-                  )
-                  .toList(),
-            ),
-          ),
-        ],
-      ),
+      // appBar: AppBar(
+      //   title: Text(
+      //     " " + AppLocalizations.of(context)!.signin,
+      //     style: TextStyle(
+      //       fontSize: 40,
+      //       color: FontColor2,
+      //     ),
+      //   ),
+      //   actions: <Widget>[
+      //     Padding(
+      //       padding: const EdgeInsets.only(right: 35),
+      //       child: DropdownButton<Language>(
+      //         underline: const SizedBox(),
+      //         icon: const Icon(
+      //           Icons.language,
+      //           color: FontColor2,
+      //         ),
+      //         onChanged: (Language? language) async {
+      //           if (language != null) {
+      //             Locale _locale = await setLocale(language.languageCode);
+      //             MyApp.setLocale(context, _locale);
+      //           }
+      //         },
+      //         items: Language.languageList()
+      //             .map<DropdownMenuItem<Language>>(
+      //               (e) => DropdownMenuItem<Language>(
+      //                 value: e,
+      //                 child: Row(
+      //                   mainAxisAlignment: MainAxisAlignment.spaceAround,
+      //                   children: <Widget>[
+      //                     Text(
+      //                       e.name,
+      //                       style: const TextStyle(fontSize: 15),
+      //                     )
+      //                   ],
+      //                 ),
+      //               ),
+      //             )
+      //             .toList(),
+      //       ),
+      //     ),
+      //   ],
+      // ),
+
       body: Form(
         key: _formKey,
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Container(
                 constraints: const BoxConstraints(
@@ -99,22 +126,41 @@ class _LoginPageState extends State<Login2Page> {
                 child: Image.asset('assets/logo.png'),
               ),
               SizedBox(height: 10),
-              TextFormField(
-                controller: _usernameController,
-                decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context)!.user,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
+              Container(
+                height: 90,
+                child: Stack(
+                  children: [
+                    TextFormField(
+                      controller: _usernameController,
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.user,
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 50.0, horizontal: 50.0),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return AppLocalizations.of(context)!.pls_user;
+                        }
+                        return null;
+                      },
+                    ),
+                    Positioned(
+                      top: 55,
+                      left: 50,
+                      child: Container(
+                        color: Colors.red,
+                        child: Text(
+                          "asdasd",
+                          style: const TextStyle(color: ErrorColor),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return AppLocalizations.of(context)!.pls_user;
-                  }
-                  return null;
-                },
               ),
-              const SizedBox(height: 20.0),
               TextFormField(
                 controller: _passwordController,
                 obscureText: true,
@@ -213,29 +259,5 @@ class _LoginPageState extends State<Login2Page> {
         ),
       ),
     );
-  }
-
-  void _login() {
-    print('Sign In');
-    if (_formKey.currentState!.validate()) {
-      setState(() {
-        _errorMessage = null;
-      });
-
-      final String hashedPassword = hashPassword(_passwordController.text);
-      //เพิ่มความปลอดภัยหใ้กับรหัสผ่าน
-      if (_usernameController.text == 'admin' &&
-          hashedPassword == 'hashed_1234') {
-        context.router.replaceNamed('/homescreen');
-      } else {
-        setState(() {
-          _errorMessage = AppLocalizations.of(context)!.inva;
-        });
-      }
-    }
-  }
-
-  String hashPassword(String password) {
-    return 'hashed_$password';
   }
 }
