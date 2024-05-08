@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_workshop/constants/color.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 @RoutePage()
@@ -42,7 +43,7 @@ class _mainhomeRouteState extends State<MainhomePage> {
             width: 500,
             height: 250,
             decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 235, 235, 235),
+              color: BoxColor,
               border: Border.all(
                   color: const Color.fromARGB(255, 14, 13, 13), width: 3),
               borderRadius: BorderRadius.circular(5),
@@ -77,7 +78,7 @@ class _mainhomeRouteState extends State<MainhomePage> {
               width: 250,
               height: 200,
               decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 235, 235, 235),
+                color: BoxColor,
                 borderRadius: BorderRadius.circular(10.0),
               ),
               child: Column(
@@ -90,7 +91,7 @@ class _mainhomeRouteState extends State<MainhomePage> {
                   Text(
                     "LED Light",
                     style: TextStyle(
-                        color: Color.fromARGB(255, 14, 13, 13),
+                        color: FontColor,
                         fontSize: 15,
                         fontWeight: FontWeight.bold),
                   ),
@@ -102,9 +103,9 @@ class _mainhomeRouteState extends State<MainhomePage> {
                       [Color.fromARGB(255, 14, 13, 13)],
                       [Color.fromARGB(255, 14, 13, 13)]
                     ],
-                    activeFgColor: Colors.grey,
-                    inactiveBgColor: Colors.grey,
-                    inactiveFgColor: Colors.grey,
+                    activeFgColor: GreyColor,
+                    inactiveBgColor: GreyColor,
+                    inactiveFgColor: GreyColor,
                     initialLabelIndex: 1, // Adjust as needed
                     totalSwitches: 2,
                     labels: ['ON', 'OFF'],
@@ -116,8 +117,7 @@ class _mainhomeRouteState extends State<MainhomePage> {
                   SizedBox(height: 10),
                   Text(
                     "Status : ",
-                    style: TextStyle(
-                        color: Color.fromARGB(255, 14, 13, 13), fontSize: 30),
+                    style: TextStyle(color: FontColor, fontSize: 30),
                   ),
                 ],
               ),
@@ -142,7 +142,7 @@ class _mainhomeRouteState extends State<MainhomePage> {
                   Text(
                     "Servo Mortor",
                     style: TextStyle(
-                        color: Color.fromRGBO(14, 13, 13, 1),
+                        color: FontColor,
                         fontSize: 15,
                         fontWeight: FontWeight.bold),
                   ),
@@ -154,9 +154,9 @@ class _mainhomeRouteState extends State<MainhomePage> {
                       [Color.fromARGB(255, 14, 13, 13)],
                       [Color.fromARGB(255, 14, 13, 13)]
                     ],
-                    activeFgColor: Colors.grey,
-                    inactiveBgColor: Colors.grey,
-                    inactiveFgColor: Colors.grey,
+                    activeFgColor: GreyColor,
+                    inactiveBgColor: GreyColor,
+                    inactiveFgColor: GreyColor,
                     initialLabelIndex: 1,
                     totalSwitches: 2,
                     labels: ['ON', 'OFF'],
@@ -168,8 +168,7 @@ class _mainhomeRouteState extends State<MainhomePage> {
                   SizedBox(height: 10),
                   Text(
                     "Status : ",
-                    style: TextStyle(
-                        color: Color.fromARGB(255, 14, 13, 13), fontSize: 30),
+                    style: TextStyle(color: FontColor, fontSize: 30),
                   ),
                 ],
               ),
@@ -212,9 +211,9 @@ class _mainhomeRouteState extends State<MainhomePage> {
                       [Color.fromARGB(255, 14, 13, 13)],
                       [Color.fromARGB(255, 14, 13, 13)]
                     ],
-                    activeFgColor: Colors.grey,
-                    inactiveBgColor: Colors.grey,
-                    inactiveFgColor: Colors.grey,
+                    activeFgColor: GreyColor,
+                    inactiveBgColor: GreyColor,
+                    inactiveFgColor: GreyColor,
                     initialLabelIndex: 1, // Adjust as needed
                     totalSwitches: 2,
                     labels: ['ON', 'OFF'],
@@ -226,8 +225,7 @@ class _mainhomeRouteState extends State<MainhomePage> {
                   SizedBox(height: 10),
                   Text(
                     "Status : ",
-                    style: TextStyle(
-                        color: Color.fromARGB(255, 14, 13, 13), fontSize: 30),
+                    style: TextStyle(color: FontColor, fontSize: 30),
                   ),
                 ],
               ),
@@ -252,7 +250,7 @@ class _mainhomeRouteState extends State<MainhomePage> {
                   Text(
                     "Sensor",
                     style: TextStyle(
-                        color: Color.fromARGB(255, 14, 13, 13),
+                        color: FontColor,
                         fontSize: 15,
                         fontWeight: FontWeight.bold),
                   ),
@@ -301,7 +299,7 @@ class _mainhomeRouteState extends State<MainhomePage> {
                   Text(
                     "Webcam",
                     style: TextStyle(
-                        color: Color.fromARGB(255, 14, 13, 13),
+                        color: FontColor,
                         fontSize: 15,
                         fontWeight: FontWeight.bold),
                   ),
@@ -313,9 +311,9 @@ class _mainhomeRouteState extends State<MainhomePage> {
                       [Color.fromARGB(255, 14, 13, 13)],
                       [Color.fromARGB(255, 14, 13, 13)]
                     ],
-                    activeFgColor: Colors.grey,
-                    inactiveBgColor: Colors.grey,
-                    inactiveFgColor: Colors.grey,
+                    activeFgColor: GreyColor,
+                    inactiveBgColor: GreyColor,
+                    inactiveFgColor: GreyColor,
                     initialLabelIndex: 1, // Adjust as needed
                     totalSwitches: 2,
                     labels: ['ON', 'OFF'],
@@ -327,8 +325,7 @@ class _mainhomeRouteState extends State<MainhomePage> {
                   SizedBox(height: 10),
                   Text(
                     "Status : ",
-                    style: TextStyle(
-                        color: Color.fromARGB(255, 14, 13, 13), fontSize: 30),
+                    style: TextStyle(color: FontColor, fontSize: 30),
                   ),
                 ],
               ),
@@ -368,7 +365,7 @@ class _mainhomeRouteState extends State<MainhomePage> {
                 Text(
                   "History",
                   style: TextStyle(
-                      color: Color.fromARGB(255, 14, 13, 13),
+                      color: FontColor,
                       fontSize: 40,
                       fontWeight: FontWeight.bold),
                 ),
@@ -387,7 +384,7 @@ class _mainhomeRouteState extends State<MainhomePage> {
             width: 450,
             height: 150,
             decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 235, 235, 235),
+              color: BoxColor,
               borderRadius: BorderRadius.circular(5),
             ),
             child: Row(
@@ -398,7 +395,7 @@ class _mainhomeRouteState extends State<MainhomePage> {
                 Text(
                   "Type",
                   style: TextStyle(
-                      color: Color.fromARGB(255, 14, 13, 13),
+                      color: FontColor,
                       fontSize: 40,
                       fontWeight: FontWeight.bold),
                 ),
@@ -415,10 +412,11 @@ class _mainhomeRouteState extends State<MainhomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: whiteColor,
       bottomNavigationBar: CurvedNavigationBar(
         height: 55,
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
-        color: Color.fromARGB(255, 78, 181, 145),
+        backgroundColor: whiteColor,
+        color: PrimaryColor,
         letIndexChange: (index) => true,
         items: [
           Icon(
@@ -441,12 +439,6 @@ class _mainhomeRouteState extends State<MainhomePage> {
         },
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/backgroud.jpg'),
-            fit: BoxFit.cover,
-          ),
-        ),
         child: Center(child: pageContent[_page]),
       ),
     );

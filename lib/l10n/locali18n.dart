@@ -27,6 +27,5 @@ Future<Locale> getLocale(BuildContext context) async {
   final prefs = await SharedPreferences.getInstance();
   String languageCode = prefs.getString(selectedLang) ?? 'en';
   await i18nController.setLanguageCode(languageCode);
-
   return Locale(languageCode);
 }

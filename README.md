@@ -22,7 +22,7 @@ fvm use 3.19.2
 ### step 5 รัน Project
 #### Browser
 ```
-fvm flutter run -d chrome --web-renderer html
+
 ```
 
 รันแบบระบุ port

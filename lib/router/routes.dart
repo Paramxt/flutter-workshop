@@ -1,39 +1,42 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_workshop/router/routes.gr.dart';
-import 'package:flutter_workshop/screen/Mainhome.dart';
 
 @AutoRouterConfig()
 class AppRouter extends $AppRouter {
   @override
   List<AutoRoute> get routes => [
         CustomRoute(
-            path: '/home',
-            page: HomeRoute.page,
-            initial: true,
-            transitionsBuilder: TransitionsBuilders.slideLeft),
-        CustomRoute(
-            path: '/signin',
-            page: LoginRoute.page,
-            transitionsBuilder: TransitionsBuilders.slideTop),
-        CustomRoute(
-            path: '/example',
-            page: ExampleRoute.page,
-            transitionsBuilder: TransitionsBuilders.slideLeft),
-        CustomRoute(
-            path: '/signup',
-            page: SignUpRoute.page,
-            transitionsBuilder: TransitionsBuilders.slideLeft),
-        CustomRoute(
-            path: '/page0',
+            path: '/mainhome',
             page: MainhomeRoute.page,
             transitionsBuilder: TransitionsBuilders.slideLeft),
         CustomRoute(
-            path: '/page1',
-            page: SettingRoute.page,
+            path: '/adddevice',
+            page: AdddeviceRoute.page,
             transitionsBuilder: TransitionsBuilders.slideLeft),
         CustomRoute(
-            path: '/eiei',
-            page: EieiRoute.page,
-            transitionsBuilder: TransitionsBuilders.slideLeft)
+            path: '/signinv2',
+            page: Login2Route.page,
+            initial: true,
+            transitionsBuilder: TransitionsBuilders.slideLeft),
+        CustomRoute(
+            path: '/signupv2',
+            page: SignUp2Route.page,
+            transitionsBuilder: TransitionsBuilders.slideLeft),
+        CustomRoute(
+            path: '/homescreen',
+            page: HomeScreenRoute.page,
+            transitionsBuilder: TransitionsBuilders.slideLeft),
+        CustomRoute(
+            path: '/examplev2',
+            page: ExampleRoute.page,
+            transitionsBuilder: TransitionsBuilders.slideLeft),
+        CustomRoute(
+            path: '/homedevice',
+            page: HomeDeviceRoute.page,
+            transitionsBuilder: TransitionsBuilders.slideLeft),
+        CustomRoute(
+            path: '/machine',
+            page: MachineRoute.page,
+            transitionsBuilder: TransitionsBuilders.slideLeft),
       ];
 }
