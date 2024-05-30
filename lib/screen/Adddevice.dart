@@ -5,10 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_workshop/constants/color.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_workshop/router/routes.gr.dart';
 
-@RoutePage()
 class AdddevicePage extends StatefulWidget {
-  const AdddevicePage({Key? key}) : super(key: key);
+  final int countDevice;
+  const AdddevicePage({Key? key, required this.countDevice}) : super(key: key);
 
   @override
   State<AdddevicePage> createState() => _adddeviceRouteState();
@@ -26,11 +29,47 @@ class _adddeviceRouteState extends State<AdddevicePage> {
     super.dispose();
   }
 
+  Future<void> scanBarcode() async {
+    try {
+      String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+        '#ff6666',
+        'Cancel',
+        true,
+        ScanMode.BARCODE,
+      );
+      debugPrint(barcodeScanRes);
+      setState(() {
+        _scanBarcode = barcodeScanRes;
+      });
+    } catch (e) {
+      print('Error scanning barcode: $e');
+      setState(() {
+        _scanBarcode = 'Error: $e';
+      });
+    }
+  }
+
+  void _connect() {
+    print('Click Connect Device');
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _errorMessage = null;
+      });
+      if (_serialNum.text == 'admin') {
+        context.router.replace(HomeDeviceRoute(countDevice: 1));
+      } else {
+        setState(() {
+          _errorMessage = AppLocalizations.of(context)!.not_found;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final _Heightbox = 50.0;
     return Scaffold(
-      backgroundColor: GreyColor,
+      backgroundColor: GreyColor.withOpacity(0.3),
       appBar: AppBar(
         backgroundColor: BottomColor2,
         title: Text(
@@ -42,13 +81,21 @@ class _adddeviceRouteState extends State<AdddevicePage> {
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.router.replaceNamed('/homescreen'),
+          onPressed: () {
+            final updatedCountDevice = widget.countDevice + 1;
+            context.router.replace(
+              HomeDeviceRoute(
+                countDevice: 0,
+              ),
+            );
+          },
         ),
       ),
       body: Container(
         child: Padding(
           padding: const EdgeInsets.all(30.0),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Align(
                 alignment: Alignment.center,
@@ -64,6 +111,7 @@ class _adddeviceRouteState extends State<AdddevicePage> {
                     ElevatedButton(
                       onPressed: () {
                         print('Click Scan bar code');
+                        scanBarcode();
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: SecondaryColor,
@@ -94,7 +142,7 @@ class _adddeviceRouteState extends State<AdddevicePage> {
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 30.0),
                           child: Text(
-                            'OR',
+                            AppLocalizations.of(context)!.or,
                             style:
                                 TextStyle(color: SecondaryColor, fontSize: 17),
                           ),
@@ -160,6 +208,7 @@ class _adddeviceRouteState extends State<AdddevicePage> {
                                 style: const TextStyle(
                                     color: Color.fromARGB(255, 255, 28, 12)),
                               ),
+                            const SizedBox(height: 56),
                           ],
                         ))
                   ],
@@ -170,37 +219,5 @@ class _adddeviceRouteState extends State<AdddevicePage> {
         ),
       ),
     );
-  }
-
-  Future<void> scanBarcode() async {
-    String barcodeScanRes;
-    try {
-      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
-      debugPrint(barcodeScanRes);
-    } on PlatformException {
-      barcodeScanRes = 'Filed to get platform version.';
-    }
-    if (!mounted) return;
-
-    setState(() {
-      _scanBarcode = barcodeScanRes;
-    });
-  }
-
-  void _connect() {
-    print('Click Connect Device');
-    if (_formKey.currentState!.validate()) {
-      setState(() {
-        _errorMessage = null;
-      });
-      if (_serialNum.text == 'admin') {
-        context.router.replaceNamed('/homedevice');
-      } else {
-        setState(() {
-          _errorMessage = AppLocalizations.of(context)!.not_found;
-        });
-      }
-    }
   }
 }

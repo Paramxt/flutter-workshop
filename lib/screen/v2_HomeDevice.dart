@@ -4,11 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_workshop/constants/color.dart';
 import 'package:flutter_workshop/screen/screenhome.dart';
-import 'package:flutter_workshop/screen/screennoti.dart';
+import 'package:flutter_workshop/screen/screenhis.dart';
 import 'package:flutter_workshop/screen/screenprofile.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_workshop/constants/variable.dart';
 
 class HomeDevicePage extends StatefulWidget {
-  const HomeDevicePage({super.key});
+  final int countDevice;
+
+  const HomeDevicePage({Key? key, required this.countDevice}) : super(key: key);
 
   @override
   State<HomeDevicePage> createState() => _HomeDevicePageState();
@@ -16,9 +20,15 @@ class HomeDevicePage extends StatefulWidget {
 
 class _HomeDevicePageState extends State<HomeDevicePage> {
   int myIndex = 0;
-  List<Widget> widgetList = const [Screen1(), Screen2(), Screen3()];
+
   @override
   Widget build(BuildContext context) {
+    List<Widget> widgetList = [
+      ScreenHome(countDevice: widget.countDevice),
+      ScreenHis(),
+      ScreenProfile(countDevice: widget.countDevice),
+    ];
+
     return Scaffold(
       body: IndexedStack(
         children: widgetList,
@@ -37,11 +47,16 @@ class _HomeDevicePageState extends State<HomeDevicePage> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Home',
+            label: AppLocalizations.of(context)!.home,
           ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.notifications_active), label: 'Notification'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+            icon: Icon(Icons.assignment),
+            label: AppLocalizations.of(context)!.info,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: AppLocalizations.of(context)!.profile,
+          ),
         ],
       ),
     );

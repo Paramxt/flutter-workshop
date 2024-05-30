@@ -1,13 +1,12 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_workshop/constants/color.dart';
 import 'package:flutter_workshop/l10n/language.dart';
 import 'package:flutter_workshop/l10n/language2.dart';
 import 'package:flutter_workshop/main.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_workshop/screen/list_machine.dart';
-import 'package:toggle_switch/toggle_switch.dart';
+import 'package:flutter_workshop/router/routes.gr.dart';
+import 'package:flutter_workshop/constants/variable.dart';
 
 @RoutePage()
 class Login2Page extends StatefulWidget {
@@ -23,7 +22,9 @@ class _LoginPageState extends State<Login2Page> {
   final _passwordController = TextEditingController();
   String? _errorMessage;
   bool isSelected = false;
-  final _Heightbox = 60.0;
+  bool _isOpen = false;
+  Language? _selectedLanguage;
+  bool _isLoggingIn = false;
 
   @override
   void dispose() {
@@ -38,225 +39,307 @@ class _LoginPageState extends State<Login2Page> {
     });
   }
 
-  Future<void> _login() async {
-    print('Sign In');
-    if (_formKey.currentState!.validate()) {
-      setState(() {
-        _errorMessage = null;
-      });
+  String? validatePassword(String value) {
+    if (value == null || value.isEmpty) {
+      return AppLocalizations.of(context)!.pls_pass;
+    }
+    return null;
+  }
 
-      final String hashedPassword = hashPassword(_passwordController.text);
-      //เพิ่มความปลอดภัยหใ้กับรหัสผ่าน
+  void _login() async {
+    print('Sign In');
+    if (_isLoggingIn) return;
+
+    setState(() {
+      _isLoggingIn = true;
+      _errorMessage = null;
+    });
+
+    if (_formKey.currentState!.validate()) {
+      int countDevice;
       if (_usernameController.text == 'admin' &&
-          hashedPassword == 'hashed_1234') {
+          _passwordController.text == '1234') {
+        countDevice = count_device_admin;
         await Future.delayed(Duration(seconds: 5));
-        context.router.replaceNamed('/homescreen');
+        context.router.replace(HomeDeviceRoute(countDevice: countDevice));
+      } else if (_usernameController.text == 'user' &&
+          _passwordController.text == '1234') {
+        countDevice = count_device_user;
+        await Future.delayed(Duration(seconds: 5));
+        context.router.replace(HomeDeviceRoute(countDevice: countDevice));
       } else {
         setState(() {
-          _errorMessage = AppLocalizations.of(context)!.inva;
+          _errorMessage = 'Invalid username or password';
         });
       }
     }
-  }
 
-  String hashPassword(String password) {
-    return 'hashed_$password';
+    setState(() {
+      _isLoggingIn = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: whiteColor,
-      // appBar: AppBar(
-      //   title: Text(
-      //     " " + AppLocalizations.of(context)!.signin,
-      //     style: TextStyle(
-      //       fontSize: 40,
-      //       color: FontColor2,
-      //     ),
-      //   ),
-      //   actions: <Widget>[
-      //     Padding(
-      //       padding: const EdgeInsets.only(right: 35),
-      //       child: DropdownButton<Language>(
-      //         underline: const SizedBox(),
-      //         icon: const Icon(
-      //           Icons.language,
-      //           color: FontColor2,
-      //         ),
-      //         onChanged: (Language? language) async {
-      //           if (language != null) {
-      //             Locale _locale = await setLocale(language.languageCode);
-      //             MyApp.setLocale(context, _locale);
-      //           }
-      //         },
-      //         items: Language.languageList()
-      //             .map<DropdownMenuItem<Language>>(
-      //               (e) => DropdownMenuItem<Language>(
-      //                 value: e,
-      //                 child: Row(
-      //                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-      //                   children: <Widget>[
-      //                     Text(
-      //                       e.name,
-      //                       style: const TextStyle(fontSize: 15),
-      //                     )
-      //                   ],
-      //                 ),
-      //               ),
-      //             )
-      //             .toList(),
-      //       ),
-      //     ),
-      //   ],
-      // ),
-
-      body: Form(
-        key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                constraints: const BoxConstraints(
-                  maxWidth: 500.0,
-                  maxHeight: 500.0,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Expanded(
+            flex: 0,
+            child: Container(
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: EdgeInsets.only(right: 25),
+                  child: DropdownButton(
+                    onChanged: (Language? language) async {
+                      if (language != null) {
+                        Locale _locale = await setLocale(language.languageCode);
+                        MyApp.setLocale(context, _locale);
+                        setState(() {
+                          _selectedLanguage = language;
+                        });
+                      }
+                    },
+                    items: Language.languageList()
+                        .map<DropdownMenuItem<Language>>(
+                          (e) => DropdownMenuItem<Language>(
+                            value: e,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: <Widget>[
+                                Text(
+                                  e.name,
+                                  style: const TextStyle(fontSize: 15),
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                        .toList(),
+                    hint: Text(
+                      _selectedLanguage != null
+                          ? _selectedLanguage!.name
+                          : 'Select Language',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                  ),
                 ),
-                child: Image.asset('assets/logo.png'),
               ),
-              SizedBox(height: 10),
-              Container(
-                height: 90,
-                child: Stack(
-                  children: [
-                    TextFormField(
-                      controller: _usernameController,
-                      decoration: InputDecoration(
-                        labelText: AppLocalizations.of(context)!.user,
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 50.0, horizontal: 50.0),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: Center(
+              child: Form(
+                key: _formKey,
+                child: Padding(
+                  padding: const EdgeInsets.all(25.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        constraints: const BoxConstraints(
+                          maxWidth: 200.0,
+                          maxHeight: 240.0,
+                        ),
+                        child: Image.asset('assets/logo.png'),
+                      ),
+                      Text(
+                        AppLocalizations.of(context)!.signin,
+                        style: TextStyle(fontSize: 20, color: FontblackColor),
+                      ),
+                      SizedBox(height: 10),
+                      Stack(
+                        children: [
+                          Column(
+                            children: [
+                              Container(
+                                height: 80.0,
+                                child: Container(
+                                  child: TextFormField(
+                                    controller: _usernameController,
+                                    obscureText: true,
+                                    decoration: InputDecoration(
+                                      labelText:
+                                          AppLocalizations.of(context)!.user,
+                                      border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                      ),
+                                    ),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return AppLocalizations.of(context)!
+                                            .pls_user;
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5),
+                      Stack(
+                        children: [
+                          Column(
+                            children: [
+                              Container(
+                                height: 80.0,
+                                child: Container(
+                                  height: 60.0,
+                                  child: TextFormField(
+                                    controller: _passwordController,
+                                    obscureText: true,
+                                    decoration: InputDecoration(
+                                      labelText: AppLocalizations.of(context)!
+                                          .password,
+                                      border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                      ),
+                                    ),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return AppLocalizations.of(context)!
+                                            .pls_user;
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 5.0),
+                      Stack(
+                        children: [
+                          Column(
+                            children: [
+                              Container(
+                                height: 80,
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      height: 55,
+                                      child: ElevatedButton(
+                                        onPressed: _isLoggingIn ? null : _login,
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: PrimaryColor,
+                                          minimumSize:
+                                              Size(double.infinity, 55),
+                                        ),
+                                        child: _isLoggingIn
+                                            ? SizedBox(
+                                                width: 20,
+                                                height: 20,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<
+                                                          Color>(PrimaryColor),
+                                                ),
+                                              )
+                                            : Text(
+                                                AppLocalizations.of(context)!
+                                                    .signin,
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  color: FontColor,
+                                                  fontSize: 18.0,
+                                                ),
+                                              ),
+                                      ),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.bottomCenter,
+                                      child: _errorMessage != null
+                                          ? Container(
+                                              child: Text(
+                                                _errorMessage!,
+                                                style: const TextStyle(
+                                                    color: RedColor),
+                                              ),
+                                            )
+                                          : SizedBox(),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment:
+                            MainAxisAlignment.center, // Center the content
+                        children: [
+                          Spacer(),
+                          Expanded(
+                            flex: 10,
+                            child: Divider(
+                              thickness: 1.5,
+                              color: FontblackColor,
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 30.0),
+                            child: Text(
+                              AppLocalizations.of(context)!.or,
+                              style: TextStyle(
+                                  color: FontblackColor, fontSize: 17),
+                            ),
+                          ),
+                          SizedBox(height: 25),
+                          Expanded(
+                            flex: 10,
+                            child: Divider(
+                              thickness: 1.5,
+                              color: FontblackColor,
+                            ),
+                          ),
+                          Spacer(),
+                        ],
+                      ),
+                      const SizedBox(height: 20.0),
+                      GestureDetector(
+                        onTap: () {
+                          print('click Sign Up!');
+                          context.router.replaceNamed('/signupv2');
+                        },
+                        child: RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                  text: AppLocalizations.of(context)!.not_acc,
+                                  style: TextStyle(fontSize: 17)),
+                              TextSpan(
+                                text: AppLocalizations.of(context)!.signup,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: FontInUp,
+                                  fontSize: 17,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return AppLocalizations.of(context)!.pls_user;
-                        }
-                        return null;
-                      },
-                    ),
-                    Positioned(
-                      top: 55,
-                      left: 50,
-                      child: Container(
-                        color: Colors.red,
-                        child: Text(
-                          "asdasd",
-                          style: const TextStyle(color: ErrorColor),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              TextFormField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context)!.password,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return AppLocalizations.of(context)!.pls_pass;
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20.0),
-              ElevatedButton(
-                onPressed: _login,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: PrimaryColor,
-                  minimumSize: Size(double.infinity, _Heightbox),
-                ),
-                child: Text(
-                  AppLocalizations.of(context)!.signin,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: FontColor,
-                    fontSize: 18.0,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 15),
-              if (_errorMessage != null)
-                Text(
-                  _errorMessage!,
-                  style: const TextStyle(color: ErrorColor),
-                ),
-              const SizedBox(height: 10),
-              const Row(
-                mainAxisAlignment:
-                    MainAxisAlignment.center, // Center the content
-                children: [
-                  Spacer(),
-                  Expanded(
-                    flex: 10,
-                    child: Divider(
-                      thickness: 1.5,
-                      color: FontColor2,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 30.0),
-                    child: Text(
-                      'OR',
-                      style: TextStyle(color: FontColor2, fontSize: 17),
-                    ),
-                  ),
-                  SizedBox(height: 25),
-                  Expanded(
-                    flex: 10,
-                    child: Divider(
-                      thickness: 1.5,
-                      color: FontColor2,
-                    ),
-                  ),
-                  Spacer(),
-                ],
-              ),
-              const SizedBox(height: 20.0),
-              GestureDetector(
-                onTap: () {
-                  print('click Sign Up!');
-                  context.router.replaceNamed('/signupv2');
-                },
-                child: RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                          text: AppLocalizations.of(context)!.not_acc,
-                          style: TextStyle(fontSize: 17)),
-                      TextSpan(
-                        text: AppLocalizations.of(context)!.signup,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: FontInUp,
-                          fontSize: 17,
-                        ),
-                      ),
+                      const SizedBox(height: 48.0),
                     ],
                   ),
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

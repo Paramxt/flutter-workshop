@@ -25,28 +25,38 @@ class ProfileMenuWidget extends StatelessWidget {
 
     return ListTile(
       onTap: onPress,
-      leading: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(100),
-          color: iconColor.withOpacity(0.1),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+      leading: Padding(
+        padding: const EdgeInsets.only(left: 0.0), // Adjust padding if needed
+        child: Container(
+          width: 30, // Adjust width if needed
+          height: 30, // Adjust height if needed
+          child: Center(
+            child: Icon(
+              icon,
+              color: SecondaryColor,
+            ),
+          ),
         ),
-        child: Icon(icon, color: SecondaryColor),
       ),
-      title: Text(title,
-          style:
-              Theme.of(context).textTheme.bodyText1?.apply(color: textColor)),
+      title: Text(
+        title,
+        style: Theme.of(context).textTheme.bodyText1?.apply(color: textColor),
+      ),
       trailing: endIcon
-          ? Container(
-              width: 30,
-              height: 30,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-                color: Colors.grey.withOpacity(0.1),
+          ? Padding(
+              padding:
+                  const EdgeInsets.only(right: 0.0), // Adjust padding if needed
+              child: Container(
+                width: 30, // Adjust width if needed (optional)
+                height: 30, // Adjust height if needed (optional)
+                child: const Icon(
+                  Icons.arrow_forward_ios,
+                  size: 18.0,
+                  color: Colors.grey,
+                ),
               ),
-              child: const Icon(Icons.arrow_forward_ios,
-                  size: 18.0, color: Colors.grey))
+            )
           : null,
     );
   }
