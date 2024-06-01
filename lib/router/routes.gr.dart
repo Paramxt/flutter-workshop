@@ -11,12 +11,11 @@
 import 'package:auto_route/auto_route.dart' as _i6;
 import 'package:flutter_workshop/screen/Adddevice.dart' as _i1;
 import 'package:flutter_workshop/screen/example.dart' as _i2;
-import 'package:flutter_workshop/screen/Mainhome.dart' as _i4;
+
 import 'package:flutter_workshop/screen/v2_SignIn.dart' as _i3;
 import 'package:flutter_workshop/screen/v2_SignUp.dart' as _i5;
-import 'package:flutter_workshop/screen/v2_HomeDevice.dart' as _i7;
-import 'package:flutter_workshop/screen/v2_HomeScreen.dart' as _i8;
-import 'package:flutter_workshop/screen/Machine1.dart' as _i9;
+import 'package:flutter_workshop/screen/v2_HomeDevice.dart' as _i8;
+import 'package:flutter_workshop/screen/setting.dart' as _i10;
 
 abstract class $AppRouter extends _i6.RootStackRouter {
   $AppRouter({super.navigatorKey});
@@ -24,9 +23,11 @@ abstract class $AppRouter extends _i6.RootStackRouter {
   @override
   final Map<String, _i6.PageFactory> pagesMap = {
     AdddeviceRoute.name: (routeData) {
+      final args = routeData?.argsAs<AdddeviceRouteArgs>() ??
+          AdddeviceRouteArgs(countDevice: 0);
       return _i6.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i1.AdddevicePage(),
+        child: _i1.AdddevicePage(countDevice: args.countDevice),
       );
     },
     ExampleRoute.name: (routeData) {
@@ -41,12 +42,6 @@ abstract class $AppRouter extends _i6.RootStackRouter {
         child: const _i3.Login2Page(),
       );
     },
-    MainhomeRoute.name: (routeData) {
-      return _i6.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i4.MainhomePage(),
-      );
-    },
     SignUp2Route.name: (routeData) {
       return _i6.AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -54,21 +49,16 @@ abstract class $AppRouter extends _i6.RootStackRouter {
       );
     },
     HomeDeviceRoute.name: (routeData) {
+      final args = routeData.argsAs<HomeDeviceRouteArgs>();
       return _i6.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i7.HomeDevicePage(),
+        child: _i8.HomeDevicePage(countDevice: args.countDevice),
       );
     },
-    HomeScreenRoute.name: (routeData) {
+    SettingRoute.name: (routeData) {
       return _i6.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i8.HomeScreenPage(),
-      );
-    },
-    MachineRoute.name: (routeData) {
-      return _i6.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i9.MachinePage(),
+        child: const _i10.SettingPage(),
       );
     },
   };
@@ -76,16 +66,23 @@ abstract class $AppRouter extends _i6.RootStackRouter {
 
 /// generated route for
 /// [_i1.AdddevicePage]
-class AdddeviceRoute extends _i6.PageRouteInfo<void> {
-  const AdddeviceRoute({List<_i6.PageRouteInfo>? children})
+class AdddeviceRoute extends _i6.PageRouteInfo<AdddeviceRouteArgs> {
+  AdddeviceRoute({required int countDevice, List<_i6.PageRouteInfo>? children})
       : super(
           AdddeviceRoute.name,
+          args: AdddeviceRouteArgs(countDevice: countDevice),
           initialChildren: children,
         );
 
   static const String name = 'AdddeviceRoute';
 
   static const _i6.PageInfo<void> page = _i6.PageInfo<void>(name);
+}
+
+class AdddeviceRouteArgs {
+  final int countDevice;
+
+  AdddeviceRouteArgs({required this.countDevice});
 }
 
 /// generated route for
@@ -117,20 +114,6 @@ class Login2Route extends _i6.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i4.MainhomePage]
-class MainhomeRoute extends _i6.PageRouteInfo<void> {
-  const MainhomeRoute({List<_i6.PageRouteInfo>? children})
-      : super(
-          MainhomeRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'MainhomeRoute';
-
-  static const _i6.PageInfo<void> page = _i6.PageInfo<void>(name);
-}
-
-/// generated route for
 /// [_i5.SignUp2Page]
 class SignUp2Route extends _i6.PageRouteInfo<void> {
   const SignUp2Route({List<_i6.PageRouteInfo>? children})
@@ -145,43 +128,37 @@ class SignUp2Route extends _i6.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i7.HomeDevicePage]
-class HomeDeviceRoute extends _i6.PageRouteInfo<void> {
-  const HomeDeviceRoute({List<_i6.PageRouteInfo>? children})
+/// [_i8.HomeDevicePage]
+class HomeDeviceRoute extends _i6.PageRouteInfo<HomeDeviceRouteArgs> {
+  HomeDeviceRoute({required int countDevice, List<_i6.PageRouteInfo>? children})
       : super(
           HomeDeviceRoute.name,
+          args: HomeDeviceRouteArgs(countDevice: countDevice),
           initialChildren: children,
         );
 
   static const String name = 'HomeDeviceRoute';
 
-  static const _i6.PageInfo<void> page = _i6.PageInfo<void>(name);
+  static const _i6.PageInfo<HomeDeviceRouteArgs> page =
+      _i6.PageInfo<HomeDeviceRouteArgs>(name);
+}
+
+class HomeDeviceRouteArgs {
+  final int countDevice;
+
+  HomeDeviceRouteArgs({required this.countDevice});
 }
 
 /// generated route for
-/// [_i8.HomeScreenPage]
-class HomeScreenRoute extends _i6.PageRouteInfo<void> {
-  const HomeScreenRoute({List<_i6.PageRouteInfo>? children})
+/// [_i10.SettingPage]
+class SettingRoute extends _i6.PageRouteInfo<void> {
+  const SettingRoute({List<_i6.PageRouteInfo>? children})
       : super(
-          HomeScreenRoute.name,
+          SettingRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'HomeScreenRoute';
-
-  static const _i6.PageInfo<void> page = _i6.PageInfo<void>(name);
-}
-
-/// generated route for
-/// [_i9.MachinePage]
-class MachineRoute extends _i6.PageRouteInfo<void> {
-  const MachineRoute({List<_i6.PageRouteInfo>? children})
-      : super(
-          MachineRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'MachineRoute';
+  static const String name = 'SettingRoute';
 
   static const _i6.PageInfo<void> page = _i6.PageInfo<void>(name);
 }

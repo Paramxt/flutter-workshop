@@ -6,10 +6,6 @@ class AppRouter extends $AppRouter {
   @override
   List<AutoRoute> get routes => [
         CustomRoute(
-            path: '/mainhome',
-            page: MainhomeRoute.page,
-            transitionsBuilder: TransitionsBuilders.slideLeft),
-        CustomRoute(
             path: '/adddevice',
             page: AdddeviceRoute.page,
             transitionsBuilder: TransitionsBuilders.slideLeft),
@@ -23,10 +19,6 @@ class AppRouter extends $AppRouter {
             page: SignUp2Route.page,
             transitionsBuilder: TransitionsBuilders.slideLeft),
         CustomRoute(
-            path: '/homescreen',
-            page: HomeScreenRoute.page,
-            transitionsBuilder: TransitionsBuilders.slideLeft),
-        CustomRoute(
             path: '/examplev2',
             page: ExampleRoute.page,
             transitionsBuilder: TransitionsBuilders.slideLeft),
@@ -35,8 +27,8 @@ class AppRouter extends $AppRouter {
             page: HomeDeviceRoute.page,
             transitionsBuilder: TransitionsBuilders.slideLeft),
         CustomRoute(
-            path: '/machine',
-            page: MachineRoute.page,
+            path: '/setting',
+            page: SettingRoute.page,
             transitionsBuilder: TransitionsBuilders.slideLeft),
       ];
 }
