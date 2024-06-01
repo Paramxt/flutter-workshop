@@ -51,6 +51,7 @@ dependencies:
   flutter_barcode_scanner: ^2.0.0
   line_awesome_flutter: ^2.0.0
   get: ^4.6.6
+  sleek_circular_slider: ^2.0.1
 
 
 dev_dependencies:
@@ -73,13 +74,24 @@ flutter:
   generate: true
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
-  # the material Icons class.
+  # the material Icons class. 
   uses-material-design: true
 
   assets:
     - assets/backgroud.jpg
     - assets/logo.png
     - assets/logo3.png
+    - assets/servo.png
+    - assets/stepper.png
+    - assets/webcam.png
+    - assets/webcam2.png
+    - assets/Bin2.jpg
+    - assets/Bin.png
+    - assets/bin01.png
+    - assets/bin02.png
+    - assets/Clear.JPG
+    - assets/Cloudy.JPG
+    - assets/Color.JPG
 
   # To add assets to your application, add an assets section, like this:
   # assets:
