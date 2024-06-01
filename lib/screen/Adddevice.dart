@@ -9,6 +9,7 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_workshop/router/routes.gr.dart';
 
+@RoutePage()
 class AdddevicePage extends StatefulWidget {
   final int countDevice;
   const AdddevicePage({Key? key, required this.countDevice}) : super(key: key);

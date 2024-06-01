@@ -10,8 +10,8 @@ import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 class ScreenHome extends StatelessWidget {
-  final int countDevice;
-  const ScreenHome({super.key, required this.countDevice});
+  final int countDevice = 0;
+  ScreenHome({super.key,  countDevice});
 
   @override
   Widget build(BuildContext context) {
@@ -59,8 +59,10 @@ class _HaveDeviceScreenState extends State<HaveDeviceScreen> {
   int? _selectedTabIndex = 0;
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: PrimaryColor,
+      bottomSheet: Container(child: Text('1'),),
       body: Stack(
         children: <Widget>[
           Positioned(
@@ -71,7 +73,7 @@ class _HaveDeviceScreenState extends State<HaveDeviceScreen> {
               height: 260,
               decoration: BoxDecoration(
                 color: Color.fromARGB(255, 195, 243, 227),
-                borderRadius: BorderRadius.circular(200),
+                borderRadius: BorderRadius.circular(9999999),
                 boxShadow: [
                   BoxShadow(
                     color: GreyColor.withOpacity(0.1),

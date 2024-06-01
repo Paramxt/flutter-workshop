@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_workshop/constants/color.dart';
 import 'package:flutter_workshop/l10n/language.dart';
 import 'package:flutter_workshop/l10n/language2.dart';
@@ -23,8 +25,25 @@ class _LoginPageState extends State<Login2Page> {
   String? _errorMessage;
   bool isSelected = false;
   bool _isOpen = false;
-  Language? _selectedLanguage;
+  String _selectedLanguage = "en";
   bool _isLoggingIn = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+  }
+
+  _initLanguage() async {
+
+    getLocale().then((locale) {
+      setState(() {
+        _selectedLanguage = locale.languageCode;
+      });
+    });
+
+  }
 
   @override
   void dispose() {
@@ -83,55 +102,11 @@ class _LoginPageState extends State<Login2Page> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: whiteColor,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: Stack(
+        // crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Expanded(
-            flex: 0,
-            child: Container(
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: EdgeInsets.only(right: 25),
-                  child: DropdownButton(
-                    onChanged: (Language? language) async {
-                      if (language != null) {
-                        Locale _locale = await setLocale(language.languageCode);
-                        MyApp.setLocale(context, _locale);
-                        setState(() {
-                          _selectedLanguage = language;
-                        });
-                      }
-                    },
-                    items: Language.languageList()
-                        .map<DropdownMenuItem<Language>>(
-                          (e) => DropdownMenuItem<Language>(
-                            value: e,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: <Widget>[
-                                Text(
-                                  e.name,
-                                  style: const TextStyle(fontSize: 15),
-                                )
-                              ],
-                            ),
-                          ),
-                        )
-                        .toList(),
-                    hint: Text(
-                      _selectedLanguage != null
-                          ? _selectedLanguage!.name
-                          : 'Select Language',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 3,
+          Container(
+            // flex: 3,
             child: Center(
               child: Form(
                 key: _formKey,
@@ -312,7 +287,7 @@ class _LoginPageState extends State<Login2Page> {
                       GestureDetector(
                         onTap: () {
                           print('click Sign Up!');
-                          context.router.replaceNamed('/signupv2');
+                          context.router.pushNamed('/signupv2');
                         },
                         child: RichText(
                           text: TextSpan(
@@ -332,8 +307,65 @@ class _LoginPageState extends State<Login2Page> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 48.0),
+                      // const SizedBox(height: 48.0),
                     ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 2,
+            right: 2,
+            child: Container(
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: EdgeInsets.only(right: 25),
+                  child: DropdownButton(
+                    value: _selectedLanguage,
+                    // value: Language(1, "English", "en"),
+                    onChanged: (String? language) async {
+                      if (language != null) {
+                        Locale _locale = await setLocale(language);
+                        MyApp.setLocale(context, _locale);
+                        setState(() {
+                          _selectedLanguage = language;
+                        });
+                      }
+                    },
+                    items: [
+                      DropdownMenuItem<String>(
+                        value: "en",
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            Text(
+                              "EN",
+                              style: const TextStyle(fontSize: 15),
+                            )
+                          ],
+                        ),
+                      ),
+                      DropdownMenuItem<String>(
+                        value: "th",
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            Text(
+                              "TH",
+                              style: const TextStyle(fontSize: 15),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                    hint: Text(
+                      _selectedLanguage != ""
+                          ? _selectedLanguage
+                          : 'Select Language',
+                      style: TextStyle(fontSize: 15),
+                    ),
                   ),
                 ),
               ),

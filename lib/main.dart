@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_workshop/l10n/locali18n.dart';
 import 'package:flutter_workshop/router/routes.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:url_strategy/url_strategy.dart';
 
 void main() {
-  runApp(MyApp());
+  setPathUrlStrategy();
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
-  MyApp({super.key});
+  const MyApp({super.key});
   // ignore: library_private_types_in_public_api
   static _MyAppState of(BuildContext context) =>
       context.findAncestorStateOfType<_MyAppState>()!;

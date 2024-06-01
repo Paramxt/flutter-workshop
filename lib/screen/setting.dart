@@ -6,6 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_workshop/screen/ProfileMenuWidget.dart';
 import 'package:flutter_workshop/screen/setting_language.dart';
 
+@RoutePage()
 class SettingPage extends StatelessWidget {
   const SettingPage({super.key});
 

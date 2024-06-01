@@ -9,10 +9,11 @@ import 'package:flutter_workshop/screen/screenprofile.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_workshop/constants/variable.dart';
 
+@RoutePage()
 class HomeDevicePage extends StatefulWidget {
   final int countDevice;
 
-  const HomeDevicePage({Key? key, required this.countDevice}) : super(key: key);
+  const HomeDevicePage({Key? key, this.countDevice = 0}) : super(key: key);
 
   @override
   State<HomeDevicePage> createState() => _HomeDevicePageState();

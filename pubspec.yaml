@@ -52,6 +52,7 @@ dependencies:
   line_awesome_flutter: ^2.0.0
   get: ^4.6.6
   sleek_circular_slider: ^2.0.1
+  url_strategy: ^0.2.0
 
 
 dev_dependencies:

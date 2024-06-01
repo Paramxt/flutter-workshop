@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_workshop/router/routes.gr.dart';
+import 'package:get/route_manager.dart';
 
 @AutoRouterConfig()
 class AppRouter extends $AppRouter {
@@ -7,28 +8,22 @@ class AppRouter extends $AppRouter {
   List<AutoRoute> get routes => [
         CustomRoute(
             path: '/adddevice',
-            page: AdddeviceRoute.page,
-            transitionsBuilder: TransitionsBuilders.slideLeft),
+            page: AdddeviceRoute.page),
         CustomRoute(
             path: '/signinv2',
             page: Login2Route.page,
-            initial: true,
-            transitionsBuilder: TransitionsBuilders.slideLeft),
+            initial: true),
         CustomRoute(
             path: '/signupv2',
-            page: SignUp2Route.page,
-            transitionsBuilder: TransitionsBuilders.slideLeft),
+            page: SignUp2Route.page),
         CustomRoute(
             path: '/examplev2',
-            page: ExampleRoute.page,
-            transitionsBuilder: TransitionsBuilders.slideLeft),
+            page: ExampleRoute.page),
         CustomRoute(
             path: '/homedevice',
-            page: HomeDeviceRoute.page,
-            transitionsBuilder: TransitionsBuilders.slideLeft),
+            page: HomeDeviceRoute.page),
         CustomRoute(
             path: '/setting',
-            page: SettingRoute.page,
-            transitionsBuilder: TransitionsBuilders.slideLeft),
+            page: SettingRoute.page),
       ];
 }
