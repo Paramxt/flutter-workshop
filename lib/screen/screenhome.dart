@@ -246,7 +246,7 @@ class _HaveDeviceScreenState extends State<HaveDeviceScreen> {
                                 '20',
                                 style: TextStyle(
                                   fontSize: 16,
-                                  color: Colors.blue, // Adjust as needed
+                                  color: FontColor, // Adjust as needed
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -289,7 +289,7 @@ class _HaveDeviceScreenState extends State<HaveDeviceScreen> {
                                 '20',
                                 style: TextStyle(
                                   fontSize: 16,
-                                  color: Colors.blue, // Adjust as needed
+                                  color: FontColor, // Adjust as needed
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -321,7 +321,7 @@ class _HaveDeviceScreenState extends State<HaveDeviceScreen> {
             DraggableScrollableSheet(
               initialChildSize: 0.4,
               minChildSize: 0.4,
-              maxChildSize: 0.4,
+              maxChildSize: 0.6,
               builder: (context, ScrollController) {
                 return Container(
                   decoration: BoxDecoration(

@@ -18,10 +18,10 @@ class _sensorscreenState extends State<sensorscreen> {
     int _Bin4 = 1;
     return Scaffold(
       body: GridView.count(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(8),
         crossAxisCount: 2,
-        mainAxisSpacing: 12,
-        crossAxisSpacing: 12,
+        mainAxisSpacing: 10,
+        crossAxisSpacing: 10,
         childAspectRatio: 2,
         children: <Widget>[
           GestureDetector(
@@ -33,7 +33,7 @@ class _sensorscreenState extends State<sensorscreen> {
                   return AlertDialog(
                     title: Row(
                       children: <Widget>[
-                        Text(AppLocalizations.of(context)!.clear),
+                        Text(AppLocalizations.of(context)!.clear_plas),
                         const SizedBox(width: 10),
                         Container(
                           width: 40,
@@ -144,7 +144,7 @@ class _sensorscreenState extends State<sensorscreen> {
                   return AlertDialog(
                     title: Row(
                       children: <Widget>[
-                        Text(AppLocalizations.of(context)!.color),
+                        Text(AppLocalizations.of(context)!.color_plas),
                         const SizedBox(width: 10),
                         Container(
                           width: 40,
@@ -255,7 +255,7 @@ class _sensorscreenState extends State<sensorscreen> {
                   return AlertDialog(
                     title: Row(
                       children: <Widget>[
-                        Text(AppLocalizations.of(context)!.cloudy),
+                        Text(AppLocalizations.of(context)!.cloudy_plas),
                         const SizedBox(width: 10),
                         Container(
                           width: 40,

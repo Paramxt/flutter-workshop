@@ -81,7 +81,8 @@ class _LoginPageState extends State<Login2Page> {
         backgroundColor: whiteColor,
         body: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Align(
                 alignment: Alignment.centerRight,
@@ -282,7 +283,6 @@ class _LoginPageState extends State<Login2Page> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 48.0),
                       ],
                     ),
                   ),
