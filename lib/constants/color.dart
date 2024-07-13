@@ -1,11 +1,10 @@
+// ignore_for_file: constant_identifier_names
 import 'package:flutter/material.dart';
 
-// final Color PrimaryColor = const Color.fromARGB(255, 78, 181, 145);
-final Color BottomColor2 = Color.fromARGB(255, 248, 248, 248);
-final Color BoxColor = const Color.fromARGB(255, 235, 235, 235);
-final Color BlackColor = Color.fromARGB(255, 5, 5, 5);
-final Color SwitchColor = const Color.fromARGB(255, 14, 13, 13);
-
+const BottomColor2 = Color.fromARGB(255, 248, 248, 248);
+const BoxColor = Color.fromARGB(255, 235, 235, 235);
+const BlackColor = Color.fromARGB(255, 5, 5, 5);
+const SwitchColor = Color.fromARGB(255, 14, 13, 13);
 const PrimaryColor = Color.fromARGB(255, 78, 181, 145);
 const AccentColor = Color.fromARGB(255, 181, 78, 114);
 const SecondaryColor = Color.fromARGB(255, 14, 13, 13);
@@ -24,4 +23,4 @@ const OrangeBinColor = Color.fromARGB(230, 245, 115, 42);
 const BlueBinColor = Color.fromARGB(230, 18, 134, 230);
 const GreenBinColor = Color.fromARGB(230, 13, 177, 49);
 const RedBinColor = Color.fromARGB(230, 228, 57, 57);
-const SkyeBlueColor = Color.fromARGB(179, 223, 245, 247);
+const SkyeBlueColor = Color.fromARGB(179, 80, 240, 255);

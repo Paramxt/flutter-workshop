@@ -62,5 +62,9 @@
     "change_lang":"Select Language",
     "pass_and_secu":"Password and Security",
     "language":"Language",
-    "descri_1":"- Bin number 1, clear Polyethylene Terephthalate.\n- Easy to recycle.\n- Processing synthetic fibers."
+    "descri_1":"- Bin number 1, clear Polyethylene Terephthalate.\n- Easy to recycle.\n- Processing synthetic fibers.",
+    "descri_2":"- Bin number 2, color Polyethylene Terephthalate.\n- Difficult to recycle.\n- Separate pigments before processing.",
+    "descri_3":"- Bin number 3, cloudy High-density Polyethylene.\n- High melting point.\n- It must be ground into small pieces.",
+    "descri_4":"- Bin number 4 will be the bin that accepts sorting items other than the previous three bin, such as cans, glasses, cardboard boxes, etc.",
+    "close":"Close"
 }

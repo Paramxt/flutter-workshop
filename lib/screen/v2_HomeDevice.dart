@@ -12,8 +12,7 @@ import 'package:flutter_workshop/constants/variable.dart';
 @RoutePage()
 class HomeDevicePage extends StatefulWidget {
   final int countDevice;
-
-  const HomeDevicePage({Key? key, this.countDevice = 0}) : super(key: key);
+  const HomeDevicePage({Key? key, required this.countDevice}) : super(key: key);
 
   @override
   State<HomeDevicePage> createState() => _HomeDevicePageState();
@@ -30,35 +29,37 @@ class _HomeDevicePageState extends State<HomeDevicePage> {
       ScreenProfile(countDevice: widget.countDevice),
     ];
 
-    return Scaffold(
-      body: IndexedStack(
-        children: widgetList,
-        index: myIndex,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: whiteColor,
-        showUnselectedLabels: false,
-        selectedItemColor: PrimaryColor,
-        onTap: (index) {
-          setState(() {
-            myIndex = index;
-          });
-        },
-        currentIndex: myIndex,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: AppLocalizations.of(context)!.home,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.assignment),
-            label: AppLocalizations.of(context)!.info,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: AppLocalizations.of(context)!.profile,
-          ),
-        ],
+    return SafeArea(
+      child: Scaffold(
+        body: IndexedStack(
+          children: widgetList,
+          index: myIndex,
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: whiteColor,
+          showUnselectedLabels: false,
+          selectedItemColor: PrimaryColor,
+          onTap: (index) {
+            setState(() {
+              myIndex = index;
+            });
+          },
+          currentIndex: myIndex,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: AppLocalizations.of(context)!.home,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.assignment),
+              label: AppLocalizations.of(context)!.info,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: AppLocalizations.of(context)!.profile,
+            ),
+          ],
+        ),
       ),
     );
   }

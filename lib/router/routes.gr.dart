@@ -39,8 +39,7 @@ abstract class $AppRouter extends _i7.RootStackRouter {
       );
     },
     HomeDeviceRoute.name: (routeData) {
-      final args = routeData.argsAs<HomeDeviceRouteArgs>(
-          orElse: () => const HomeDeviceRouteArgs());
+      final args = routeData.argsAs<HomeDeviceRouteArgs>();
       return _i7.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i3.HomeDevicePage(
@@ -78,7 +77,7 @@ class AdddeviceRoute extends _i7.PageRouteInfo<AdddeviceRouteArgs> {
     required int countDevice,
     List<_i7.PageRouteInfo>? children,
   }) : super(
-          AdddeviceRoute.name,
+          HomeDeviceRoute.name,
           args: AdddeviceRouteArgs(
             key: key,
             countDevice: countDevice,
@@ -127,7 +126,7 @@ class ExampleRoute extends _i7.PageRouteInfo<void> {
 class HomeDeviceRoute extends _i7.PageRouteInfo<HomeDeviceRouteArgs> {
   HomeDeviceRoute({
     _i8.Key? key,
-    int countDevice = 1,
+    required int countDevice,
     List<_i7.PageRouteInfo>? children,
   }) : super(
           HomeDeviceRoute.name,
@@ -147,7 +146,7 @@ class HomeDeviceRoute extends _i7.PageRouteInfo<HomeDeviceRouteArgs> {
 class HomeDeviceRouteArgs {
   const HomeDeviceRouteArgs({
     this.key,
-    this.countDevice = 1,
+    required this.countDevice,
   });
 
   final _i8.Key? key;

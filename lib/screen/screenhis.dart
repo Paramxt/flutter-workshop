@@ -91,7 +91,7 @@ class _TypePlasticScreenState extends State<TypePlasticScreen> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-        padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
+        padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
         child: _buildPanel(),
       ),
     );
@@ -110,18 +110,18 @@ class _TypePlasticScreenState extends State<TypePlasticScreen> {
             return ListTile(
               title: Text(
                 item.headerValue,
-                style: TextStyle(fontSize: 17),
+                style: const TextStyle(fontSize: 17),
               ),
             );
           },
           body: ListTile(
             title: Text(
               item.expandedValue,
-              style: TextStyle(fontSize: 17),
+              style: const TextStyle(fontSize: 17),
             ),
             subtitle: Text(
               item.descriptions,
-              style: TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16),
             ),
           ),
           isExpanded: item.isExpanded,

@@ -2,15 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_workshop/l10n/locali18n.dart';
 import 'package:flutter_workshop/router/routes.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/services.dart';
 import 'package:url_strategy/url_strategy.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   setPathUrlStrategy();
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
   // ignore: library_private_types_in_public_api
   static _MyAppState of(BuildContext context) =>
       context.findAncestorStateOfType<_MyAppState>()!;
@@ -26,7 +30,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final _appRouter = AppRouter();
-
   Locale _locale = const Locale('en', '');
 
   setLocale(Locale locale) async {
@@ -37,15 +40,19 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  String username = '';
+  int countDevice = 0;
   @override
   void initState() {
     super.initState();
+    _loadDataFromSharedPreferences();
+  }
 
-    getLocale(context).then((locale) {
-      if (_locale == locale) return;
-      setState(() {
-        _locale = locale;
-      });
+  _loadDataFromSharedPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      username = prefs.getString('username') ?? '';
+      countDevice = prefs.getInt('countDevice') ?? 0;
     });
   }
 

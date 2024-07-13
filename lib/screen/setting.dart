@@ -1,9 +1,7 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_workshop/constants/color.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_workshop/screen/ProfileMenuWidget.dart';
 import 'package:flutter_workshop/screen/setting_language.dart';
 
 @RoutePage()
@@ -29,19 +27,17 @@ class SettingPage extends StatelessWidget {
           },
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(15),
+      body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             Container(
               decoration: BoxDecoration(
-                color: Grey2Color.withOpacity(0.5),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Column(
                 children: [
                   ListTile(
-                    contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                    contentPadding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                     title: Text(
                       AppLocalizations.of(context)!.language,
                       style: TextStyle(
@@ -49,22 +45,21 @@ class SettingPage extends StatelessWidget {
                         color: BlackColor,
                       ),
                     ),
-                    trailing: Icon(
+                    trailing: const Icon(
                       Icons.navigate_next_outlined,
                       size: 30,
                     ),
                     onTap: () {
-                      print('Click Language');
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ChangeLanguagePage()),
+                            builder: (context) => const ChangeLanguagePage()),
                       );
                     },
                   ),
-                  Divider(color: Colors.grey),
+                  const Divider(color: Colors.grey),
                   ListTile(
-                    contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                    contentPadding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                     title: Text(
                       AppLocalizations.of(context)!.pass_and_secu,
                       style: TextStyle(
@@ -72,17 +67,15 @@ class SettingPage extends StatelessWidget {
                         color: BlackColor,
                       ),
                     ),
-                    trailing: Icon(
+                    trailing: const Icon(
                       Icons.navigate_next_outlined,
                       size: 30,
                     ),
-                    onTap: () {
-                      print('Click Password');
-                    },
+                    onTap: () {},
                   ),
-                  Divider(color: Colors.grey),
+                  const Divider(color: Colors.grey),
                   ListTile(
-                    contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                    contentPadding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                     title: Text(
                       AppLocalizations.of(context)!.setting,
                       style: TextStyle(
@@ -90,13 +83,11 @@ class SettingPage extends StatelessWidget {
                         color: BlackColor,
                       ),
                     ),
-                    trailing: Icon(
+                    trailing: const Icon(
                       Icons.navigate_next_outlined,
                       size: 30,
                     ),
-                    onTap: () {
-                      print('Click Setting');
-                    },
+                    onTap: () {},
                   ),
                 ],
               ),

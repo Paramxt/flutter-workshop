@@ -1,12 +1,9 @@
-import 'package:auto_route/auto_route.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_workshop/constants/color.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_workshop/l10n/language.dart';
 import 'package:flutter_workshop/l10n/language2.dart';
 import 'package:flutter_workshop/main.dart';
-import 'package:flutter_workshop/screen/ProfileMenuWidget.dart';
 
 class ChangeLanguagePage extends StatefulWidget {
   const ChangeLanguagePage({super.key});
@@ -37,30 +34,32 @@ class _ChangeLanguageState extends State<ChangeLanguagePage> {
           },
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(10),
+      body: SingleChildScrollView(
         child: Column(
-          children: Language.languageList().map((Language language) {
+          children: Language.languageList().asMap().entries.map((entry) {
+            int index = entry.key;
+            Language language = entry.value;
             return Column(
               children: [
                 ListTile(
-                  contentPadding: EdgeInsets.fromLTRB(15, 0, 0, 0),
+                  contentPadding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
                   title: Text(
                     language.name,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 17,
                       color: Colors.black,
                     ),
                   ),
                   onTap: () async {
-                    Locale _locale = await setLocale(language.languageCode);
-                    MyApp.setLocale(context, _locale);
+                    Locale locale = await setLocale(language.languageCode);
+                    MyApp.setLocale(context, locale);
                     setState(() {
                       _selectedLanguage = language;
                     });
                   },
                 ),
-                Divider(color: Colors.grey),
+                if (index != Language.languageList().length - 1)
+                  const Divider(color: Colors.grey, thickness: 1.0),
               ],
             );
           }).toList(),
