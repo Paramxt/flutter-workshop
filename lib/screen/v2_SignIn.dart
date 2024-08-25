@@ -6,6 +6,12 @@ import 'package:flutter_workshop/l10n/language2.dart';
 import 'package:flutter_workshop/main.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_workshop/router/routes.gr.dart';
+import 'package:flutter_workshop/screen/screenhome.dart';
+import 'package:http/http.dart' as http;
+import 'dart:io' show Platform;
+import 'dart:convert';
+import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 @RoutePage()
 class Login2Page extends StatefulWidget {
@@ -16,11 +22,10 @@ class Login2Page extends StatefulWidget {
 
 class _LoginPageState extends State<Login2Page> {
   final _formKey = GlobalKey<FormState>();
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
-  String? _errorMessage;
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   bool isSelected = false;
-
+  String? _errorMessage;
   Language? _selectedLanguage;
   bool _isLoggingIn = false;
 
@@ -37,49 +42,81 @@ class _LoginPageState extends State<Login2Page> {
     });
   }
 
-  String? validatePassword(String value) {
-    if (value.isEmpty) {
-      return AppLocalizations.of(context)!.pls_pass;
+  Future<void> loginUser(
+      BuildContext context, String username, String password) async {
+    String baseUrl;
+    if (kIsWeb) {
+      //รันบนเว็บ (Chrome, Safari, etc.)
+      baseUrl = 'http://localhost:3300/login'; // IP Address เครื่องคอมพิวเตอร์
+    } else if (Platform.isAndroid) {
+      // สำหรับโทรศัพท์จริง
+      baseUrl = 'http://192.168.43.146:3300/login';
+    } else {
+      // สำหรับแพลตฟอร์มอื่น ๆ
+      baseUrl = 'http://11.0.100.11:3300/login';
     }
-    return null;
-  }
-
-  void _login() async {
-    print('Sign In');
-    if (_isLoggingIn) return;
-
-    setState(() {
-      _isLoggingIn = true;
-      _errorMessage = null;
-    });
+    final url = Uri.parse(baseUrl);
 
     if (_formKey.currentState!.validate()) {
-      if (_usernameController.text == 'admin' &&
-          _passwordController.text == '1234') {
-        await Future.delayed(Duration(seconds: 5));
-        context.router.push(HomeDeviceRoute(countDevice: 1));
-      } else if (_usernameController.text == 'user' &&
-          _passwordController.text == '1234') {
-        await Future.delayed(Duration(seconds: 5));
-        context.router.push(HomeDeviceRoute(countDevice: 0));
-      } else {
+      if (_isLoggingIn) return;
+      setState(() {
+        _isLoggingIn = true;
+        _errorMessage = null;
+      });
+      try {
+        final response = await http.post(
+          url,
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({
+            'username': username,
+            'password': password,
+          }),
+        );
+
+        if (response.statusCode == 200) {
+          final responseBody = jsonDecode(response.body);
+          final device = responseBody['device'];
+          final email = responseBody['email'];
+          if (device != null) {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            await prefs.setString('username', username);
+            await prefs.setString('password', password);
+            await prefs.setString('email', email);
+            await prefs.setInt('device', device);
+            await Future.delayed(const Duration(seconds: 3));
+            context.router.replaceNamed('/homedevice');
+          } else {
+            setState(() {
+              _errorMessage = 'Device data is missing';
+            });
+          }
+        } else {
+          setState(() {
+            _errorMessage = 'Login failed : ${response.body}';
+          });
+        }
+      } catch (e) {
         setState(() {
-          _errorMessage = 'Invalid username or password';
+          _errorMessage = 'Error: $e';
+        });
+      } finally {
+        setState(() {
+          _isLoggingIn = false;
         });
       }
+    } else {
+      setState(() {
+        _isLoggingIn = false;
+      });
     }
-
-    setState(() {
-      _isLoggingIn = false;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: whiteColor,
-        body: SingleChildScrollView(
+    return Scaffold(
+      backgroundColor: whiteColor,
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -193,7 +230,12 @@ class _LoginPageState extends State<Login2Page> {
                           child: Stack(
                             children: [
                               ElevatedButton(
-                                onPressed: _isLoggingIn ? null : _login,
+                                onPressed: () async {
+                                  await loginUser(
+                                      context,
+                                      _usernameController.text,
+                                      _passwordController.text);
+                                },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: PrimaryColor,
                                   minimumSize: const Size(double.infinity, 55),
@@ -227,7 +269,7 @@ class _LoginPageState extends State<Login2Page> {
                                               const TextStyle(color: RedColor),
                                         ),
                                       )
-                                    : SizedBox(),
+                                    : const SizedBox(),
                               ),
                             ],
                           ),
@@ -235,21 +277,22 @@ class _LoginPageState extends State<Login2Page> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Expanded(
+                            const Expanded(
                               child: Divider(
                                 thickness: 1.5,
                                 color: FontblackColor,
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 30.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 30.0),
                               child: Text(
                                 AppLocalizations.of(context)!.or,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     color: FontblackColor, fontSize: 17),
                               ),
                             ),
-                            Expanded(
+                            const Expanded(
                               child: Divider(
                                 thickness: 1.5,
                                 color: FontblackColor,
@@ -260,7 +303,6 @@ class _LoginPageState extends State<Login2Page> {
                         const SizedBox(height: 20.0),
                         GestureDetector(
                           onTap: () {
-                            print('click Sign Up!');
                             context.router.pushNamed('/signupv2');
                           },
                           child: RichText(
@@ -268,12 +310,12 @@ class _LoginPageState extends State<Login2Page> {
                               children: [
                                 TextSpan(
                                   text: AppLocalizations.of(context)!.not_acc,
-                                  style:
-                                      TextStyle(fontSize: 17, color: FontColor),
+                                  style: const TextStyle(
+                                      fontSize: 17, color: FontColor),
                                 ),
                                 TextSpan(
                                   text: AppLocalizations.of(context)!.signup,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: FontInUp,
                                     fontSize: 17,

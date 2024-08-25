@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_workshop/constants/color.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'dart:convert';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:flutter_workshop/screen/notification.dart';
 
 class sensorscreen extends StatefulWidget {
   const sensorscreen({super.key});
@@ -10,22 +19,44 @@ class sensorscreen extends StatefulWidget {
 }
 
 class _sensorscreenState extends State<sensorscreen> {
+  int sensor1Value = 0;
+  int sensor2Value = 0;
+  int sensor3Value = 0;
+  int sensor4Value = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSensorValues();
+  }
+
+  Future<void> _loadSensorValues() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      sensor1Value = prefs.getInt('sensor_1') ?? 0;
+      sensor2Value = prefs.getInt('sensor_2') ?? 0;
+      sensor3Value = prefs.getInt('sensor_3') ?? 0;
+      sensor4Value = prefs.getInt('sensor_4') ?? 0;
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    int _Bin1 = 1;
-    int _Bin2 = 0;
-    int _Bin3 = 0;
-    int _Bin4 = 1;
     return Scaffold(
       body: GridView.count(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(6),
         crossAxisCount: 2,
         mainAxisSpacing: 10,
         crossAxisSpacing: 10,
         childAspectRatio: 2,
         children: <Widget>[
           GestureDetector(
-            //Gride 1
+            // Grid 1
             onTap: () {
               showDialog(
                 context: context,
@@ -38,14 +69,14 @@ class _sensorscreenState extends State<sensorscreen> {
                         Container(
                           width: 40,
                           decoration: BoxDecoration(
-                            color: _Bin1 == 1 ? FullColor : EmptyColor,
+                            color: sensor1Value == 1 ? FullColor : EmptyColor,
                             borderRadius: BorderRadius.circular(5),
                           ),
                           child: Align(
                             alignment: Alignment.center,
                             child: FittedBox(
                               child: Text(
-                                _Bin1 == 1
+                                sensor1Value == 1
                                     ? AppLocalizations.of(context)!.full
                                     : AppLocalizations.of(context)!.empty,
                                 style: const TextStyle(
@@ -65,9 +96,11 @@ class _sensorscreenState extends State<sensorscreen> {
                     actions: <Widget>[
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        child: Text(AppLocalizations.of(context)!.close,
-                            style: const TextStyle(
-                                color: FontColor, fontSize: 15)),
+                        child: Text(
+                          AppLocalizations.of(context)!.close,
+                          style:
+                              const TextStyle(color: FontColor, fontSize: 15),
+                        ),
                       ),
                     ],
                   );
@@ -88,7 +121,7 @@ class _sensorscreenState extends State<sensorscreen> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.all(7.0),
+                      padding: const EdgeInsets.all(6),
                       child: Image.asset(
                         'assets/bin01.png',
                       ),
@@ -100,7 +133,7 @@ class _sensorscreenState extends State<sensorscreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        AppLocalizations.of(context)!.clear,
+                        AppLocalizations.of(context)!.clear_plas,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           color: FontblackColor,
@@ -111,14 +144,14 @@ class _sensorscreenState extends State<sensorscreen> {
                         height: 20,
                         width: 40,
                         decoration: BoxDecoration(
-                          color: _Bin1 == 1 ? FullColor : EmptyColor,
+                          color: sensor1Value == 1 ? FullColor : EmptyColor,
                           borderRadius: BorderRadius.circular(5),
                         ),
                         child: Align(
                           alignment: Alignment.center,
                           child: FittedBox(
                             child: Text(
-                              _Bin1 == 1
+                              sensor1Value == 1
                                   ? AppLocalizations.of(context)!.full
                                   : AppLocalizations.of(context)!.empty,
                               style: const TextStyle(
@@ -149,14 +182,14 @@ class _sensorscreenState extends State<sensorscreen> {
                         Container(
                           width: 40,
                           decoration: BoxDecoration(
-                            color: _Bin2 == 1 ? FullColor : EmptyColor,
+                            color: sensor2Value == 1 ? FullColor : EmptyColor,
                             borderRadius: BorderRadius.circular(5),
                           ),
                           child: Align(
                             alignment: Alignment.center,
                             child: FittedBox(
                               child: Text(
-                                _Bin2 == 1
+                                sensor2Value == 1
                                     ? AppLocalizations.of(context)!.full
                                     : AppLocalizations.of(context)!.empty,
                                 style: const TextStyle(
@@ -199,7 +232,7 @@ class _sensorscreenState extends State<sensorscreen> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.all(7.0),
+                      padding: const EdgeInsets.all(6),
                       child: Image.asset(
                         'assets/bin01.png',
                       ),
@@ -211,7 +244,7 @@ class _sensorscreenState extends State<sensorscreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        AppLocalizations.of(context)!.color,
+                        AppLocalizations.of(context)!.color_plas,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           color: FontblackColor,
@@ -222,14 +255,14 @@ class _sensorscreenState extends State<sensorscreen> {
                         height: 20,
                         width: 40,
                         decoration: BoxDecoration(
-                          color: _Bin2 == 1 ? FullColor : EmptyColor,
+                          color: sensor2Value == 1 ? FullColor : EmptyColor,
                           borderRadius: BorderRadius.circular(5),
                         ),
                         child: Align(
                           alignment: Alignment.center,
                           child: FittedBox(
                             child: Text(
-                              _Bin2 == 1
+                              sensor2Value == 1
                                   ? AppLocalizations.of(context)!.full
                                   : AppLocalizations.of(context)!.empty,
                               style: const TextStyle(
@@ -260,14 +293,14 @@ class _sensorscreenState extends State<sensorscreen> {
                         Container(
                           width: 40,
                           decoration: BoxDecoration(
-                            color: _Bin3 == 1 ? FullColor : EmptyColor,
+                            color: sensor3Value == 1 ? FullColor : EmptyColor,
                             borderRadius: BorderRadius.circular(5),
                           ),
                           child: Align(
                             alignment: Alignment.center,
                             child: FittedBox(
                               child: Text(
-                                _Bin3 == 1
+                                sensor3Value == 1
                                     ? AppLocalizations.of(context)!.full
                                     : AppLocalizations.of(context)!.empty,
                                 style: const TextStyle(
@@ -297,7 +330,7 @@ class _sensorscreenState extends State<sensorscreen> {
               );
             },
             child: Container(
-              padding: const EdgeInsets.only(left: 7, top: 7, bottom: 7),
+              padding: const EdgeInsets.only(left: 9, top: 9, bottom: 9),
               decoration: BoxDecoration(
                 color: Grey2Color.withOpacity(0.6),
                 borderRadius: BorderRadius.circular(15),
@@ -310,7 +343,7 @@ class _sensorscreenState extends State<sensorscreen> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.all(7.0),
+                      padding: const EdgeInsets.all(6),
                       child: Image.asset(
                         'assets/bin01.png',
                       ),
@@ -321,11 +354,14 @@ class _sensorscreenState extends State<sensorscreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        AppLocalizations.of(context)!.cloudy,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: FontblackColor,
+                      Container(
+                        width: 80, // กำหนดความกว้างที่แน่นอนให้กับ Text
+                        child: Text(
+                          AppLocalizations.of(context)!.cloudy_plas,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: FontblackColor,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 5),
@@ -333,14 +369,14 @@ class _sensorscreenState extends State<sensorscreen> {
                         height: 20,
                         width: 40,
                         decoration: BoxDecoration(
-                          color: _Bin3 == 1 ? FullColor : EmptyColor,
+                          color: sensor3Value == 1 ? FullColor : EmptyColor,
                           borderRadius: BorderRadius.circular(5),
                         ),
                         child: Align(
                           alignment: Alignment.center,
                           child: FittedBox(
                             child: Text(
-                              _Bin3 == 1
+                              sensor3Value == 1
                                   ? AppLocalizations.of(context)!.full
                                   : AppLocalizations.of(context)!.empty,
                               style: const TextStyle(
@@ -371,14 +407,14 @@ class _sensorscreenState extends State<sensorscreen> {
                         Container(
                           width: 40,
                           decoration: BoxDecoration(
-                            color: _Bin4 == 1 ? FullColor : EmptyColor,
+                            color: sensor4Value == 1 ? FullColor : EmptyColor,
                             borderRadius: BorderRadius.circular(5),
                           ),
                           child: Align(
                             alignment: Alignment.center,
                             child: FittedBox(
                               child: Text(
-                                _Bin4 == 1
+                                sensor4Value == 1
                                     ? AppLocalizations.of(context)!.full
                                     : AppLocalizations.of(context)!.empty,
                                 style: const TextStyle(
@@ -421,7 +457,7 @@ class _sensorscreenState extends State<sensorscreen> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.all(7.0),
+                      padding: const EdgeInsets.all(6),
                       child: Image.asset(
                         'assets/bin01.png',
                       ),
@@ -444,14 +480,14 @@ class _sensorscreenState extends State<sensorscreen> {
                         height: 20,
                         width: 40,
                         decoration: BoxDecoration(
-                          color: _Bin4 == 1 ? FullColor : EmptyColor,
+                          color: sensor4Value == 1 ? FullColor : EmptyColor,
                           borderRadius: BorderRadius.circular(5),
                         ),
                         child: Align(
                           alignment: Alignment.center,
                           child: FittedBox(
                             child: Text(
-                              _Bin4 == 1
+                              sensor4Value == 1
                                   ? AppLocalizations.of(context)!.full
                                   : AppLocalizations.of(context)!.empty,
                               style: const TextStyle(
@@ -482,175 +518,121 @@ class historyscreen extends StatefulWidget {
 }
 
 class _historyscreenState extends State<historyscreen> {
+  List<Map<String, dynamic>> historyList = [];
+  @override
+  void initState() {
+    super.initState();
+    _fetchHistory();
+  }
+
+  Future<void> _fetchHistory() async {
+    String baseUrl;
+    if (kIsWeb) {
+      // รันบนเว็บ (Chrome, Safari, etc.)
+      baseUrl =
+          'http://localhost:3300/gethistory'; // IP Address เครื่องคอมพิวเตอร์
+    } else if (Platform.isAndroid) {
+      // สำหรับโทรศัพท์จริง
+      baseUrl = 'http://192.168.43.146:3300/gethistory';
+    } else {
+      // สำหรับแพลตฟอร์มอื่น ๆ
+      baseUrl = 'http://11.0.100.11:3300/gethistory';
+    }
+
+    final url = Uri.parse(baseUrl);
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+
+        // ตรวจสอบว่าหน้าจอยังคงเปิดอยู่ก่อนเรียก setState
+        if (mounted) {
+          setState(() {
+            historyList = data
+                .map((item) => {
+                      'type': item['type'],
+                      'numbin': item['numbin'],
+                      'imageBase64': item['imageBase64'] as String,
+                      'create_at': item['create_at'],
+                    })
+                .toList();
+            historyList.sort((a, b) {
+              DateTime dateA = DateTime.parse(a['create_at']);
+              DateTime dateB = DateTime.parse(b['create_at']);
+              return dateB
+                  .compareTo(dateA); // จัดเรียงจากมากไปหาน้อย (ล่าสุดก่อน)
+            });
+          });
+        }
+      } else {
+        print('Failed to load history');
+      }
+    } catch (e) {
+      print('Error fetching history: $e');
+    }
+  }
+
+  String _formatDateTime(String dateTime) {
+    final dateTimeObj = DateTime.parse(dateTime);
+    return DateFormat('yyyy-MM-dd HH:mm').format(dateTimeObj);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  height: 100,
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  decoration: BoxDecoration(
-                    color: Grey2Color.withOpacity(0.6),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Row(
-                    children: <Widget>[
-                      const SizedBox(width: 20),
-                      Container(
-                        height: 80,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Image.asset(
-                          'assets/Clear.JPG',
-                        ),
-                      ),
-                      const SizedBox(width: 20),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${AppLocalizations.of(context)!.typr} : ${AppLocalizations.of(context)!.clear}',
-                            style: const TextStyle(
-                              color: FontblackColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
+    return Container(
+      padding: EdgeInsets.all(5),
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      child: Column(
+        children: <Widget>[
+          const SizedBox(height: 10),
+          Expanded(
+            child: historyList.isEmpty
+                ? CircularProgressIndicator()
+                : ListView.builder(
+                    itemCount: historyList.length,
+                    itemBuilder: (context, index) {
+                      return Card(
+                        color: Grey2Color.withOpacity(1),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Image.memory(
+                                base64Decode(historyList[index]['imageBase64']),
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '${AppLocalizations.of(context)!.typr}: ${historyList[index]['type']}',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    Text(
+                                        '${AppLocalizations.of(context)!.bin_num}: ${historyList[index]['numbin']}'),
+                                    Text(
+                                      '${AppLocalizations.of(context)!.classi_at}: ${_formatDateTime(historyList[index]['create_at'])}',
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 10),
-                          Text(
-                            '${AppLocalizations.of(context)!.bin_num} : 1',
-                            style: const TextStyle(
-                              color: FontblackColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  height: 100,
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  decoration: BoxDecoration(
-                    color: Grey2Color.withOpacity(0.6),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Row(
-                    children: <Widget>[
-                      const SizedBox(width: 20),
-                      Container(
-                        height: 80,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Image.asset(
-                          'assets/Color.JPG',
-                        ),
-                      ),
-                      const SizedBox(width: 20),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            AppLocalizations.of(context)!.typr +
-                                ' : ' +
-                                AppLocalizations.of(context)!.color,
-                            style: const TextStyle(
-                              color: FontblackColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            AppLocalizations.of(context)!.bin_num + ' : 2',
-                            style: const TextStyle(
-                              color: FontblackColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          )
-                        ],
-                      ),
-                    ],
+                      );
+                    },
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  height: 100,
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  decoration: BoxDecoration(
-                    color: Grey2Color.withOpacity(0.6),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Row(
-                    children: <Widget>[
-                      const SizedBox(width: 20),
-                      Container(
-                        height: 80,
-                        width: 65,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Image.asset(
-                          'assets/Cloudy.JPG',
-                        ),
-                      ),
-                      const SizedBox(width: 20),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            AppLocalizations.of(context)!.typr +
-                                ' : ' +
-                                AppLocalizations.of(context)!.cloudy,
-                            style: const TextStyle(
-                              color: FontblackColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            AppLocalizations.of(context)!.bin_num + ' : 3',
-                            style: const TextStyle(
-                              color: FontblackColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

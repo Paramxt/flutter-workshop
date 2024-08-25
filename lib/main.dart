@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_workshop/l10n/locali18n.dart';
 import 'package:flutter_workshop/router/routes.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_workshop/screen/web_socket_notifier.dart';
+import 'package:flutter_workshop/screen/web_socket_service.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
 import 'package:url_strategy/url_strategy.dart';
@@ -10,7 +14,15 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   setPathUrlStrategy();
-  runApp(MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  final webSocketService = WebSocketService();
+  final notificationPlugin = FlutterLocalNotificationsPlugin();
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => WebSocketNotifier(webSocketService, notificationPlugin),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -32,16 +44,10 @@ class _MyAppState extends State<MyApp> {
   final _appRouter = AppRouter();
   Locale _locale = const Locale('en', '');
 
-  setLocale(Locale locale) async {
-    await setLocaleStore(locale.toString());
-    if (_locale == locale) return;
-    setState(() {
-      _locale = locale;
-    });
-  }
-
   String username = '';
   int countDevice = 0;
+  WebSocketNotifier? _webSocketNotifier;
+
   @override
   void initState() {
     super.initState();
@@ -53,6 +59,26 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       username = prefs.getString('username') ?? '';
       countDevice = prefs.getInt('countDevice') ?? 0;
+    });
+    if (username.isNotEmpty) {
+      final webSocketService = WebSocketService();
+      final notificationPlugin = FlutterLocalNotificationsPlugin();
+      _webSocketNotifier =
+          WebSocketNotifier(webSocketService, notificationPlugin);
+    }
+  }
+
+  @override
+  void dispose() {
+    _webSocketNotifier?.dispose();
+    super.dispose();
+  }
+
+  setLocale(Locale locale) async {
+    await setLocaleStore(locale.toString());
+    if (_locale == locale) return;
+    setState(() {
+      _locale = locale;
     });
   }
 

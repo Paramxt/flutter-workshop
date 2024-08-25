@@ -5,28 +5,50 @@ import 'package:flutter_workshop/constants/color.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:flutter_workshop/screen/ProfileMenuWidget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+Future<String?> getUsername() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('username');
+}
+
+Future<String?> getPassword() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('password');
+}
+
+Future<String?> getEmail() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('email');
+}
 
 class ScreenProfile extends StatefulWidget {
-  final int countDevice;
-  const ScreenProfile({super.key, required this.countDevice});
+  const ScreenProfile({Key? key}) : super(key: key);
 
   @override
   State<ScreenProfile> createState() => _ScreenProfileState();
 }
 
 class _ScreenProfileState extends State<ScreenProfile> {
-  int _countDevice = 0;
+  String? _username;
+  String? _password;
+  String? _email;
   @override
   void initState() {
     super.initState();
-    _countDevice = widget.countDevice;
+    _loadCredentials();
   }
 
-  // Method to set countDevice
-  void setCountDevice(int value) {
+  Future<void> _loadCredentials() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      _countDevice = value;
+      _username = prefs.getString('username');
+      _password = prefs.getString('password');
+      _email = prefs.getString('email');
     });
+    print('Loaded username: $_username');
+    print('Loaded password: $_password');
+    print('Loaded email: $_email');
   }
 
   @override
@@ -38,90 +60,79 @@ class _ScreenProfileState extends State<ScreenProfile> {
         centerTitle: true,
         title: Text(
           AppLocalizations.of(context)!.profile,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 22,
             color: SecondaryColor,
           ),
         ),
+        automaticallyImplyLeading: false,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              width: 120,
-              height: 120,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(100),
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.black,
-                      width: 3,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                width: 120,
+                height: 120,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(100),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.black,
+                        width: 3,
+                      ),
+                      borderRadius: BorderRadius.circular(100),
                     ),
-                    borderRadius: BorderRadius.circular(100),
+                    child: Image.asset('assets/logo.png'),
                   ),
-                  child: Image.asset('assets/logo.png'),
                 ),
               ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              AppLocalizations.of(context)!.admin,
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            const SizedBox(height: 10),
-            Text(
-              AppLocalizations.of(context)!.admin_add,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 15),
-            SizedBox(
-              width: 250,
-              child: ElevatedButton(
-                onPressed: () {
-                  print('Edit Profile');
-                },
-                child: Text(
-                  AppLocalizations.of(context)!.edit,
-                  style: TextStyle(color: PrimaryColor),
-                ),
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: SecondaryColor, side: BorderSide.none),
+              const SizedBox(height: 10),
+              Text(
+                '$_username',
+                style: Theme.of(context).textTheme.headlineMedium,
               ),
-            ),
-            const SizedBox(height: 20),
-            const Divider(),
-            ProfileMenuWidget(
-                title: AppLocalizations.of(context)!.setting,
-                icon: Icons.settings,
-                onPress: () {
-                  print('Click Setting');
-                  context.router.pushNamed('/setting');
-                }),
-            ProfileMenuWidget(
-                title: AppLocalizations.of(context)!.help,
-                icon: Icons.help,
-                onPress: () {
-                  print('Click Help');
-                }),
-            const Divider(),
-            ProfileMenuWidget(
-                title: AppLocalizations.of(context)!.info,
-                icon: Icons.info_rounded,
-                onPress: () {
-                  print('Click Infomation');
-                }),
-            ProfileMenuWidget(
-                title: AppLocalizations.of(context)!.logout,
-                icon: Icons.logout_outlined,
-                textColor: Colors.red,
-                endIcon: false,
-                onPress: () {
-                  setCountDevice(0);
-                  print('Click Log Out');
-                  context.router.replaceNamed('/signinv2');
-                }),
-          ],
+              const SizedBox(height: 10),
+              Text(
+                '$_email',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 15),
+              const Divider(),
+              ProfileMenuWidget(
+                  title: AppLocalizations.of(context)!.setting,
+                  icon: Icons.settings,
+                  onPress: () {
+                    print('Click Setting');
+                    context.router.pushNamed('/setting');
+                  }),
+              ProfileMenuWidget(
+                  title: AppLocalizations.of(context)!.history,
+                  icon: Icons.history_rounded,
+                  onPress: () {
+                    print('Click History');
+                    context.router.pushNamed('/examplev3');
+                  }),
+              const Divider(),
+              ProfileMenuWidget(
+                  title: AppLocalizations.of(context)!.info,
+                  icon: Icons.info_rounded,
+                  onPress: () {
+                    print('Click Infomation');
+                    context.router.pushNamed('/examplev2');
+                  }),
+              ProfileMenuWidget(
+                  title: AppLocalizations.of(context)!.logout,
+                  icon: Icons.logout_outlined,
+                  textColor: Colors.red,
+                  endIcon: false,
+                  onPress: () {
+                    print('Click Log Out');
+                    context.router.pushNamed('/signinv2');
+                  }),
+            ],
+          ),
         ),
       ),
     );

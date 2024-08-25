@@ -30,5 +30,9 @@ class AppRouter extends $AppRouter {
           path: '/setting',
           page: SettingRoute.page,
         ),
+        CustomRoute(
+          path: '/examplev3',
+          page: Examplev3Route.page,
+        ),
       ];
 }

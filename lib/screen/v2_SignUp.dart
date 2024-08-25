@@ -1,13 +1,15 @@
+import 'dart:convert';
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_workshop/constants/color.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:http/http.dart' as http;
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart';
 
 @RoutePage()
 class SignUp2Page extends StatefulWidget {
-  const SignUp2Page({Key? key}) : super(key: key);
+  const SignUp2Page({super.key});
 
   @override
   State<SignUp2Page> createState() => _Signup2PageState();
@@ -15,10 +17,6 @@ class SignUp2Page extends StatefulWidget {
 
 class _Signup2PageState extends State<SignUp2Page> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
   final _compasswordController = TextEditingController();
   String? _errorMessage;
 
@@ -27,28 +25,72 @@ class _Signup2PageState extends State<SignUp2Page> {
     _usernameController.dispose();
     _passwordController.dispose();
     _compasswordController.dispose();
-    _nameController.dispose();
     _emailController.dispose();
     super.dispose();
   }
 
-  Future<void> _signup() async {
-    print('Sign Up');
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+
+  Future<void> _submitData() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
         _errorMessage = null;
       });
-      await Future.delayed(const Duration(seconds: 2));
-      context.router.replaceNamed('/signinv2');
+
+      final username = _usernameController.text;
+      final password = _passwordController.text;
+      final email = _emailController.text;
+      String baseUrl;
+      if (kIsWeb) {
+        //รันบนเว็บ (Chrome, Safari, etc.)
+        baseUrl =
+            'http://localhost:3300/adduser'; // IP Address เครื่องคอมพิวเตอร์
+      } else if (Platform.isAndroid) {
+        // สำหรับโทรศัพท์จริง
+        baseUrl = 'http://192.168.43.146:3300/adduser';
+      } else {
+        // สำหรับแพลตฟอร์มอื่น ๆ
+        baseUrl = 'http://11.0.100.11:3300/adduser';
+      }
+
+      final url = Uri.parse(baseUrl);
+      // final url = Uri.parse('http://11.0.100.63:3300/adduser');
+
+      try {
+        final response = await http.post(
+          url,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: json.encode({
+            'username': username,
+            'password': password,
+            'email': email,
+            'device': 0,
+          }),
+        );
+
+        if (response.statusCode == 200) {
+          print('User added successfully');
+          await Future.delayed(const Duration(seconds: 1));
+          context.router.replaceNamed('/signinv2');
+        } else {
+          print('Failed to add user: ${response.body}');
+        }
+      } catch (e) {
+        print('Error occurred: $e');
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: whiteColor,
-        body: SingleChildScrollView(
+    return Scaffold(
+      backgroundColor: whiteColor,
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Form(
             key: _formKey,
             child: Padding(
@@ -62,33 +104,6 @@ class _Signup2PageState extends State<SignUp2Page> {
                       maxHeight: 150.0,
                     ),
                     child: Image.asset('assets/logo.png'),
-                  ),
-                  const SizedBox(height: 10),
-                  Stack(
-                    children: [
-                      Column(
-                        children: [
-                          SizedBox(
-                            height: 80.0,
-                            child: TextFormField(
-                              controller: _nameController,
-                              decoration: InputDecoration(
-                                labelText: AppLocalizations.of(context)!.name,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return AppLocalizations.of(context)!.pls_name;
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
                   ),
                   const SizedBox(height: 10.0),
                   Stack(
@@ -109,6 +124,13 @@ class _Signup2PageState extends State<SignUp2Page> {
                                 if (value == null || value.isEmpty) {
                                   return AppLocalizations.of(context)!
                                       .pls_email;
+                                } else {
+                                  final specialCharPattern = RegExp(
+                                      r"[!#\$%\^&\*\(\)\-\+\=\{\}\[\]:;\<>?,\\|]");
+                                  if (specialCharPattern.hasMatch(value)) {
+                                    return AppLocalizations.of(context)!
+                                        .can_not_email;
+                                  }
                                 }
                                 return null;
                               },
@@ -118,7 +140,7 @@ class _Signup2PageState extends State<SignUp2Page> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10.0),
+                  const SizedBox(height: 10),
                   Stack(
                     children: [
                       Column(
@@ -154,6 +176,7 @@ class _Signup2PageState extends State<SignUp2Page> {
                             height: 80.0,
                             child: TextFormField(
                               controller: _passwordController,
+                              obscureText: true,
                               decoration: InputDecoration(
                                 labelText:
                                     AppLocalizations.of(context)!.password,
@@ -182,6 +205,7 @@ class _Signup2PageState extends State<SignUp2Page> {
                             height: 80.0,
                             child: TextFormField(
                               controller: _compasswordController,
+                              obscureText: true,
                               decoration: InputDecoration(
                                 labelText:
                                     AppLocalizations.of(context)!.compassword,
@@ -205,7 +229,9 @@ class _Signup2PageState extends State<SignUp2Page> {
                   ),
                   const SizedBox(height: 10.0),
                   ElevatedButton(
-                    onPressed: _signup,
+                    onPressed: () async {
+                      await _submitData();
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: PrimaryColor,
                       minimumSize:
@@ -221,7 +247,7 @@ class _Signup2PageState extends State<SignUp2Page> {
                   GestureDetector(
                     onTap: () {
                       print('click Sign In!');
-                      context.router.pop('/signinv2');
+                      context.router.replaceNamed('/signinv2');
                     },
                     child: RichText(
                       text: TextSpan(
