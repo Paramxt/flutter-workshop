@@ -336,10 +336,10 @@ class _HaveDeviceScreenState extends State<HaveDeviceScreen> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Container(
-                      width: (MediaQuery.of(context).size.width / 2.2),
+                      width: (MediaQuery.of(context).size.width / 2.4),
                       height: 45,
                       margin: const EdgeInsets.only(right: 10),
                       decoration: BoxDecoration(
@@ -347,14 +347,13 @@ class _HaveDeviceScreenState extends State<HaveDeviceScreen> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          const SizedBox(width: 10),
                           Image.asset(
                             'assets/servo.png',
                             width: 20,
                             height: 20,
                           ),
-                          const SizedBox(width: 5),
                           Text(
                             AppLocalizations.of(context)!.servo,
                             overflow: TextOverflow.ellipsis,
@@ -364,25 +363,12 @@ class _HaveDeviceScreenState extends State<HaveDeviceScreen> {
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          const Expanded(
-                            child: Align(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                '0',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: FontColor, // Adjust as needed
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
+                          const SizedBox(width: 5),
                         ],
                       ),
                     ),
                     Container(
-                      width: (MediaQuery.of(context).size.width / 2.2),
+                      width: (MediaQuery.of(context).size.width / 2.4),
                       height: 45,
                       margin: const EdgeInsets.only(right: 10),
                       decoration: BoxDecoration(
@@ -390,14 +376,13 @@ class _HaveDeviceScreenState extends State<HaveDeviceScreen> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          const SizedBox(width: 10),
                           Image.asset(
                             'assets/servo.png',
                             width: 20,
                             height: 20,
                           ),
-                          const SizedBox(width: 5),
                           Text(
                             AppLocalizations.of(context)!.servo,
                             overflow: TextOverflow.ellipsis,
@@ -407,67 +392,10 @@ class _HaveDeviceScreenState extends State<HaveDeviceScreen> {
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          const Expanded(
-                            child: Align(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                '0',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: FontColor, // Adjust as needed
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      width: (MediaQuery.of(context).size.width / 2.2),
-                      height: 45,
-                      margin: const EdgeInsets.only(right: 10),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Row(
-                        children: <Widget>[
-                          const SizedBox(width: 10),
-                          Image.asset(
-                            'assets/servo.png',
-                            width: 20,
-                            height: 20,
-                          ),
                           const SizedBox(width: 5),
-                          Text(
-                            AppLocalizations.of(context)!.servo,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const Expanded(
-                            child: Align(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                '20',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: FontColor, // Adjust as needed
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
                         ],
                       ),
                     ),
-                    // Third Container (Circle)
                     Container(
                       width: 45,
                       height: 45,

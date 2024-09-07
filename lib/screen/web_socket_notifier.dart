@@ -28,20 +28,27 @@ class WebSocketNotifier extends ChangeNotifier {
   }
 
   void _handleWebSocketData(String receivedData) {
+    print('Received data: $receivedData'); // ตรวจสอบว่าข้อมูลถูกส่งมาจริง
+
     if (receivedData.startsWith("{") && receivedData.endsWith("}")) {
       try {
         var data = jsonDecode(receivedData);
         int sensor = int.tryParse(data['sensor'] ?? '0') ?? 0;
         int value = int.tryParse(data['value'] ?? '0') ?? 0;
+        print('Sensor: $sensor, Value: $value');
 
         // ตรวจสอบเซ็นเซอร์และเพิ่มการแจ้งเตือนใน List
         if (sensor == 1 && previousSensorValue1 == 0 && value == 1) {
+          print('Trigger notification for Sensor 1');
           _notifyAndUpdateSensor('1', '1');
         } else if (sensor == 2 && previousSensorValue2 == 0 && value == 1) {
+          print('Trigger notification for Sensor 2');
           _notifyAndUpdateSensor('2', '1');
         } else if (sensor == 3 && previousSensorValue3 == 0 && value == 1) {
+          print('Trigger notification for Sensor 3');
           _notifyAndUpdateSensor('3', '1');
         } else if (sensor == 4 && previousSensorValue4 == 0 && value == 1) {
+          print('Trigger notification for Sensor 4');
           _notifyAndUpdateSensor('4', '1');
         }
 
