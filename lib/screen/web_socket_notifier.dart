@@ -8,15 +8,17 @@ class WebSocketNotifier extends ChangeNotifier {
   final WebSocketService _webSocketService;
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
 
-  List<String> notifications = []; // สร้าง List สำหรับเก็บข้อความการแจ้งเตือน
+  List<String> notifications = [];
 
   int previousSensorValue1 = 0;
   int previousSensorValue2 = 0;
   int previousSensorValue3 = 0;
   int previousSensorValue4 = 0;
 
+  // คอนสตรัคเตอร์
   WebSocketNotifier(
       this._webSocketService, this._flutterLocalNotificationsPlugin) {
+    // ฟังข้อมูลจาก WebSocket
     _webSocketService.stream.listen((data) {
       _handleWebSocketData(data);
     });
@@ -24,11 +26,11 @@ class WebSocketNotifier extends ChangeNotifier {
 
   void clearNotifications() {
     notifications.clear();
-    notifyListeners(); // แจ้งเตือนว่ารายการแจ้งเตือนถูกเคลียร์แล้ว
+    notifyListeners();
   }
 
   void _handleWebSocketData(String receivedData) {
-    print('Received data: $receivedData'); // ตรวจสอบว่าข้อมูลถูกส่งมาจริง
+    print('Received data: $receivedData');
 
     if (receivedData.startsWith("{") && receivedData.endsWith("}")) {
       try {
@@ -37,7 +39,6 @@ class WebSocketNotifier extends ChangeNotifier {
         int value = int.tryParse(data['value'] ?? '0') ?? 0;
         print('Sensor: $sensor, Value: $value');
 
-        // ตรวจสอบเซ็นเซอร์และเพิ่มการแจ้งเตือนใน List
         if (sensor == 1 && previousSensorValue1 == 0 && value == 1) {
           print('Trigger notification for Sensor 1');
           _notifyAndUpdateSensor('1', '1');
@@ -52,13 +53,12 @@ class WebSocketNotifier extends ChangeNotifier {
           _notifyAndUpdateSensor('4', '1');
         }
 
-        // อัปเดตค่าก่อนหน้าของเซ็นเซอร์แต่ละตัว
         if (sensor == 1) previousSensorValue1 = value;
         if (sensor == 2) previousSensorValue2 = value;
         if (sensor == 3) previousSensorValue3 = value;
         if (sensor == 4) previousSensorValue4 = value;
 
-        notifyListeners(); // แจ้งเตือนการเปลี่ยนแปลงใน UI (หากจำเป็น)
+        notifyListeners();
       } catch (e) {
         print('Error parsing JSON data: $e');
       }
@@ -67,21 +67,19 @@ class WebSocketNotifier extends ChangeNotifier {
 
   Future<void> _notifyAndUpdateSensor(String sensorId, String newValue) async {
     try {
-      // 1. อัปเดตค่าของเซ็นเซอร์ใน SharedPreferences
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('sensor_$sensorId', newValue);
 
-      // 2. แสดงการแจ้งเตือนใน UI และบันทึกใน List
-      notifications.add('Bin : $sensorId is FULL');
-      notifyListeners(); // แจ้งเตือนว่ามีการเพิ่มการแจ้งเตือนใหม่
+      notifications.add('Bin $sensorId : is FULL');
+      notifyListeners();
 
-      // 3. แสดงการแจ้งเตือนในระบบ
-      var androidDetails = const AndroidNotificationDetails(
-        'channel_id', // channelId
-        'Channel Name', // channelName
+      var androidDetails = AndroidNotificationDetails(
+        'channel_id',
+        'Channel Name',
         importance: Importance.max,
         priority: Priority.high,
       );
+
       var notificationDetails = NotificationDetails(android: androidDetails);
 
       await _flutterLocalNotificationsPlugin.show(

@@ -257,7 +257,7 @@ class _ScreenHisState extends State<ScreenHis> {
                           : LineChart(
                               LineChartData(
                                 minY: 0,
-                                maxY: 60,
+                                maxY: 90,
                                 minX: 0,
                                 maxX: 3,
                                 lineBarsData: [

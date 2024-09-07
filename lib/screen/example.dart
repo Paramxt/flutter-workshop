@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 @RoutePage()
 class ExamplePage extends StatefulWidget {
@@ -11,115 +15,114 @@ class ExamplePage extends StatefulWidget {
 }
 
 class _ExamplePageState extends State<ExamplePage> {
-  bool isPoweredOn = true;
-  Future<void> _sendRequest(String url) async {
-    try {
-      final response = await http.get(Uri.parse(url));
-      if (response.statusCode == 200) {
-        print('Success: ${response.body}');
-      } else {
-        print('Failed to connect to the server');
-      }
-    } catch (e) {
-      print('Error: $e');
-    }
+  List<Map<String, dynamic>> historyList = [];
+
+  // ตัวแปรเก็บค่าก่อนหน้าของเซ็นเซอร์ทั้ง 4 ตัว
+  int previousSensorValue1 = 0;
+  int previousSensorValue2 = 0;
+  int previousSensorValue3 = 0;
+  int previousSensorValue4 = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    var initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
-  void _togglePower() {
-    setState(() {
-      isPoweredOn = !isPoweredOn;
-    });
-
-    // ส่งคำขอไปที่ API ตามสถานะ
-    if (isPoweredOn) {
-      _sendRequest('http://192.168.43.146:3300/start');
-    } else {
-      _sendRequest('http://192.168.43.146:3300/stop');
-    }
+  Future<void> showNotification(String title, String body) async {
+    var androidDetails = const AndroidNotificationDetails(
+      'channel_id', // channelId
+      'Channel Name', // channelName
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+    var notificationDetails = NotificationDetails(android: androidDetails);
+    await flutterLocalNotificationsPlugin.show(
+        0, title, body, notificationDetails);
   }
 
-  Future<String> checkConnectionStatus() async {
-    try {
-      final response =
-          await http.get(Uri.parse('http://192.168.43.146:3300/status'));
-      if (response.statusCode == 200) {
-        return response.body;
-      } else {
-        return 'Failed to get status';
-      }
-    } catch (e) {
-      return 'Error: $e';
-    }
+  final channel = WebSocketChannel.connect(
+    Uri.parse('ws://192.168.43.146:8080'), //IP คอม Server
+  );
+
+  @override
+  void dispose() {
+    channel.sink.close();
+    super.dispose();
   }
+
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Test Control Raspberry Pi'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
+        title: Text('Test Notification'),
       ),
-      body: SafeArea(
-        child: Center(
-          child: FutureBuilder<String>(
-            future: checkConnectionStatus(),
+      body: Column(
+        children: [
+          StreamBuilder(
+            stream: channel.stream,
             builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator(); // แสดง loading ขณะรอผลลัพธ์
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else if (snapshot.hasData) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Connection Status: ${snapshot.data}'),
-                    const SizedBox(height: 20),
-                    SizedBox(
-                      width: 90,
-                      height: 90,
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.resolveWith<Color?>(
-                            (Set<MaterialState> states) {
-                              if (!states.contains(MaterialState.pressed)) {
-                                return Colors.white; // สีปุ่มเมื่อไม่ได้กด
-                              }
-                              return null;
-                            },
-                          ),
-                          foregroundColor:
-                              MaterialStateProperty.resolveWith<Color?>(
-                            (Set<MaterialState> states) {
-                              if (!states.contains(MaterialState.pressed)) {
-                                return isPoweredOn
-                                    ? Colors.green
-                                    : Colors.red; // สีปุ่มตามสถานะ
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        onPressed: _togglePower, // เรียกฟังก์ชันเมื่อกดปุ่ม
-                        child: const Icon(
-                          Icons.power_settings_new,
-                          size: 40,
-                        ),
-                      ),
-                    ),
-                  ],
-                );
+              if (snapshot.hasData) {
+                String receivedData = snapshot.data.toString();
+
+                if (receivedData.startsWith("{") &&
+                    receivedData.endsWith("}")) {
+                  try {
+                    var data = jsonDecode(receivedData);
+                    int sensor = int.tryParse(data['sensor'] ?? '0') ?? 0;
+                    int value = int.tryParse(data['value'] ?? '0') ?? 0;
+
+                    // ตรวจสอบเซ็นเซอร์แต่ละตัว
+                    if (sensor == 1 &&
+                        previousSensorValue1 == 0 &&
+                        value == 1) {
+                      showNotification('Sensor 1 Alert',
+                          'Sensor 1 value changed from 0 to 1');
+                    } else if (sensor == 2 &&
+                        previousSensorValue2 == 0 &&
+                        value == 1) {
+                      showNotification('Sensor 2 Alert',
+                          'Sensor 2 value changed from 0 to 1');
+                    } else if (sensor == 3 &&
+                        previousSensorValue3 == 0 &&
+                        value == 1) {
+                      showNotification('Sensor 3 Alert',
+                          'Sensor 3 value changed from 0 to 1');
+                    } else if (sensor == 4 &&
+                        previousSensorValue4 == 0 &&
+                        value == 1) {
+                      showNotification('Sensor 4 Alert',
+                          'Sensor 4 value changed from 0 to 1');
+                    }
+
+                    // อัปเดตค่าก่อนหน้าของเซ็นเซอร์แต่ละตัว
+                    if (sensor == 1) previousSensorValue1 = value;
+                    if (sensor == 2) previousSensorValue2 = value;
+                    if (sensor == 3) previousSensorValue3 = value;
+                    if (sensor == 4) previousSensorValue4 = value;
+
+                    return Center(
+                        child: Text('Sensor: $sensor, Value: $value'));
+                  } catch (e) {
+                    return Center(child: Text('Error parsing JSON data'));
+                  }
+                } else {
+                  return Center(
+                      child: Text('Received non-JSON data: $receivedData'));
+                }
               } else {
-                return Text('No data');
+                return Center(child: Text('Waiting for data...'));
               }
             },
           ),
-        ),
+        ],
       ),
     );
   }

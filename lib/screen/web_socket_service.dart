@@ -5,7 +5,6 @@ class WebSocketService {
   final WebSocketChannel channel = WebSocketChannel.connect(
     Uri.parse('ws://192.168.43.146:8080'), // IP ของ Server
   );
-
   Stream<dynamic> get stream => channel.stream;
 
   void dispose() {
