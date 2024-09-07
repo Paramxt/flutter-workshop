@@ -554,7 +554,10 @@ class _historyscreenState extends State<historyscreen> {
                       'type': item['type'],
                       'numbin': item['numbin'],
                       'imageBase64': item['imageBase64'] as String,
-                      'create_at': item['create_at'],
+                      // แปลงให้เป็น String อีกครั้งหลังจากแปลงเขตเวลาเป็นท้องถิ่น
+                      'create_at': DateTime.parse(item['create_at'])
+                          .toLocal()
+                          .toString(),
                     })
                 .toList();
             historyList.sort((a, b) {
