@@ -196,13 +196,13 @@ class _ScreenHisState extends State<ScreenHis> {
                       ),
                       Indicator(
                         color: RedBinColor,
-                        text: AppLocalizations.of(context)!.color,
+                        text: AppLocalizations.of(context)!.cloudy,
                         isSquare: false,
                         size: 20,
                       ),
                       Indicator(
                         color: OrangeBinColor,
-                        text: AppLocalizations.of(context)!.cloudy,
+                        text: AppLocalizations.of(context)!.color,
                         isSquare: false,
                         size: 20,
                       ),
@@ -293,9 +293,9 @@ class _ScreenHisState extends State<ScreenHis> {
                                           0: AppLocalizations.of(context)!
                                               .clear_plas,
                                           1: AppLocalizations.of(context)!
-                                              .color_plas,
-                                          2: AppLocalizations.of(context)!
                                               .cloudy_plas,
+                                          2: AppLocalizations.of(context)!
+                                              .color_plas,
                                           3: AppLocalizations.of(context)!
                                               .other,
                                         };

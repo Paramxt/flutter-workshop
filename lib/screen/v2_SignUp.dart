@@ -56,7 +56,6 @@ class _Signup2PageState extends State<SignUp2Page> {
       }
 
       final url = Uri.parse(baseUrl);
-      // final url = Uri.parse('http://11.0.100.63:3300/adduser');
 
       try {
         final response = await http.post(

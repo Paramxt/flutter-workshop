@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_workshop/constants/color.dart';
+import 'package:flutter_workshop/screen/infomation.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:flutter_workshop/screen/ProfileMenuWidget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -120,7 +121,12 @@ class _ScreenProfileState extends State<ScreenProfile> {
                   icon: Icons.info_rounded,
                   onPress: () {
                     print('Click Infomation');
-                    context.router.pushNamed('/examplev2');
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return InfomationPage();
+                      },
+                    );
                   }),
               ProfileMenuWidget(
                   title: AppLocalizations.of(context)!.logout,

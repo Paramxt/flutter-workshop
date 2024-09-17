@@ -73,6 +73,8 @@ class _adddeviceRouteState extends State<AdddevicePage> {
       debugPrint(barcodeScanRes);
       setState(() {
         _scanBarcode = barcodeScanRes;
+        // อัปเดตข้อมูลในฟิลด์ TextFormField อัตโนมัติ
+        _serialNumController.text = barcodeScanRes;
       });
     } catch (e) {
       print('Error scanning barcode: $e');
@@ -175,9 +177,9 @@ class _adddeviceRouteState extends State<AdddevicePage> {
                         ),
                         const SizedBox(height: 25.0),
                         ElevatedButton(
-                          onPressed: () {
+                          onPressed: () async {
                             print('Click Scan bar code');
-                            scanBarcode();
+                            await scanBarcode();
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: SecondaryColor,
@@ -191,39 +193,8 @@ class _adddeviceRouteState extends State<AdddevicePage> {
                         ),
                         const SizedBox(height: 25.0),
                         Text(
-                            '${AppLocalizations.of(context)!.scanresult} : $_scanBarcode\n',
-                            style: const TextStyle(fontSize: 20)),
-                        Row(
-                          mainAxisAlignment:
-                              MainAxisAlignment.center, // Center the content
-                          children: [
-                            const Spacer(),
-                            const Expanded(
-                              flex: 10,
-                              child: Divider(
-                                thickness: 1.5,
-                                color: SecondaryColor,
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 30.0),
-                              child: Text(
-                                AppLocalizations.of(context)!.or,
-                                style: const TextStyle(
-                                    color: SecondaryColor, fontSize: 17),
-                              ),
-                            ),
-                            const SizedBox(height: 25),
-                            const Expanded(
-                              flex: 10,
-                              child: Divider(
-                                thickness: 1.5,
-                                color: SecondaryColor,
-                              ),
-                            ),
-                            const Spacer(),
-                          ],
+                          '${AppLocalizations.of(context)!.scanresult} : $_scanBarcode\n',
+                          style: const TextStyle(fontSize: 20),
                         ),
                         const SizedBox(height: 20),
                         Text(
@@ -233,54 +204,45 @@ class _adddeviceRouteState extends State<AdddevicePage> {
                         ),
                         const SizedBox(height: 25.0),
                         Form(
-                            key: _formKey,
-                            child: Column(
-                              children: <Widget>[
-                                TextFormField(
-                                  controller: _serialNumController,
-                                  decoration: InputDecoration(
-                                    labelText: AppLocalizations.of(context)!
-                                        .enterserial,
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ),
-                                  ),
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return AppLocalizations.of(context)!
-                                          .pls_serial;
-                                    }
-                                    return null;
-                                  },
-                                ),
-                                const SizedBox(height: 30),
-                                ElevatedButton(
-                                  onPressed: updateDevice,
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: SecondaryColor,
-                                    minimumSize:
-                                        Size(double.infinity, _Heightbox),
-                                  ),
-                                  child: Text(
-                                    AppLocalizations.of(context)!.connect,
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                        color:
-                                            Color.fromARGB(255, 78, 181, 145),
-                                        fontSize: 18.0),
+                          key: _formKey,
+                          child: Column(
+                            children: <Widget>[
+                              TextFormField(
+                                controller: _serialNumController,
+                                decoration: InputDecoration(
+                                  labelText:
+                                      AppLocalizations.of(context)!.enterserial,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
                                   ),
                                 ),
-                                const SizedBox(height: 15),
-                                if (_errorMessage != null)
-                                  Text(
-                                    _errorMessage!,
-                                    style: const TextStyle(
-                                        color:
-                                            Color.fromARGB(255, 255, 28, 12)),
-                                  ),
-                                const SizedBox(height: 56),
-                              ],
-                            ))
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return AppLocalizations.of(context)!
+                                        .pls_serial;
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 30),
+                              ElevatedButton(
+                                onPressed: updateDevice,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: SecondaryColor,
+                                  minimumSize:
+                                      Size(double.infinity, _Heightbox),
+                                ),
+                                child: Text(
+                                  AppLocalizations.of(context)!.connect,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                      color: Color.fromARGB(255, 78, 181, 145),
+                                      fontSize: 18.0),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),

@@ -119,6 +119,22 @@ flutter:
     - assets/en.jpg
     - assets/th.jpg
     - assets/icon/IconApp.png
+    - assets/bottle/clear01.png
+    - assets/bottle/clear02.png
+    - assets/bottle/clear03.png
+    - assets/bottle/clear04.png
+    - assets/bottle/Cloudy01.png
+    - assets/bottle/Cloudy02.png
+    - assets/bottle/Cloudy03.png
+    - assets/bottle/Cloudy04.png
+    - assets/bottle/Color01.png
+    - assets/bottle/Color02.png
+    - assets/bottle/Color03.png
+    - assets/bottle/Color04.png
+    - assets/bottle/Other01.png
+    - assets/bottle/Other02.png
+    - assets/bottle/Other03.png
+    - assets/bottle/Other04.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
