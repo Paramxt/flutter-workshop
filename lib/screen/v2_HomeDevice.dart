@@ -39,10 +39,10 @@ class _HomeDevicePageState extends State<HomeDevicePage> {
     if (kIsWeb) {
       //รันบนเว็บ (Chrome, Safari, etc.)
       baseUrl =
-          'http://localhost:3300/api/sensor-data'; // IP Address เครื่องคอมพิวเตอร์
+          'http://localhost:3333/api/sensor-data'; // IP Address เครื่องคอมพิวเตอร์
     } else if (Platform.isAndroid) {
       // สำหรับโทรศัพท์จริง
-      baseUrl = 'http://192.168.43.146:3300/api/sensor-data';
+      baseUrl = 'http://192.168.43.174:3333/api/sensor-data';
     } else {
       // สำหรับแพลตฟอร์มอื่น ๆ
       baseUrl = 'http://11.0.100.11:3300/api/sensor-data';

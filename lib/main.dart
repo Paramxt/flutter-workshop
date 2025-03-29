@@ -17,6 +17,14 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final webSocketService = WebSocketService();
   final notificationPlugin = FlutterLocalNotificationsPlugin();
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+
+  final InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+  );
+
+  await notificationPlugin.initialize(initializationSettings);
   runApp(
     ChangeNotifierProvider(
       create: (_) => WebSocketNotifier(webSocketService, notificationPlugin),

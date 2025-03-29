@@ -28,9 +28,9 @@ class _ScreenHisState extends State<ScreenHis> {
   Future<void> _fetchNumbinStats() async {
     String baseUrl;
     if (kIsWeb) {
-      baseUrl = 'http://localhost:3300/getnumbinstats';
+      baseUrl = 'http://localhost:3333/getnumbinstats';
     } else if (Platform.isAndroid) {
-      baseUrl = 'http://192.168.43.146:3300/getnumbinstats';
+      baseUrl = 'http://192.168.43.174:3333/getnumbinstats';
     } else {
       baseUrl = 'http://11.0.100.11:3300/getnumbinstats';
     }

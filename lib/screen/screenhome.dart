@@ -22,6 +22,8 @@ Future<int?> getDeviceData() async {
   return prefs.getInt('device');
 }
 
+bool _isLoading = true;
+
 class ScreenHome extends StatefulWidget {
   const ScreenHome({Key? key}) : super(key: key);
 
@@ -31,8 +33,6 @@ class ScreenHome extends StatefulWidget {
 
 class _ScreenHomeState extends State<ScreenHome> {
   int? device;
-  bool _isLoading = true;
-
   @override
   void initState() {
     super.initState();
@@ -92,14 +92,17 @@ class _HaveDeviceScreenState extends State<HaveDeviceScreen> {
   int? _selectedTabIndex = 0;
 
   Future<void> _refreshSensorData() async {
+    setState(() {
+      _isLoading = true; // Show loading indicator
+    });
     String baseUrl;
     if (kIsWeb) {
       //รันบนเว็บ (Chrome, Safari, etc.)
       baseUrl =
-          'http://localhost:3300/api/sensor-data'; // IP Address เครื่องคอมพิวเตอร์
+          'http://localhost:3333/api/sensor-data'; // IP Address เครื่องคอมพิวเตอร์
     } else if (Platform.isAndroid) {
       // สำหรับโทรศัพท์จริง
-      baseUrl = 'http://192.168.43.146:3300/api/sensor-data';
+      baseUrl = 'http://192.168.43.174:3333/api/sensor-data';
     } else {
       // สำหรับแพลตฟอร์มอื่น ๆ
       baseUrl = 'http://11.0.100.11:3300/api/sensor-data';
@@ -109,7 +112,7 @@ class _HaveDeviceScreenState extends State<HaveDeviceScreen> {
 
       if (response.statusCode == 200) {
         List<dynamic> sensorData = jsonDecode(response.body);
-
+        // print('Sensor data: $sensorData');
         SharedPreferences prefs = await SharedPreferences.getInstance();
 
         // วนลูปเพื่อบันทึกข้อมูลแต่ละเซ็นเซอร์ลงใน SharedPreferences
@@ -126,8 +129,11 @@ class _HaveDeviceScreenState extends State<HaveDeviceScreen> {
       }
     } catch (error) {
       print('Error fetching sensor data: $error');
+    } finally {
+      setState(() {
+        _isLoading = false; // Hide loading indicator
+      });
     }
-    setState(() {});
   }
 
   Future<void> _sendRequest(String url) async {
@@ -150,16 +156,16 @@ class _HaveDeviceScreenState extends State<HaveDeviceScreen> {
 
     // ส่งคำขอไปที่ API ตามสถานะ
     if (isPoweredOn) {
-      _sendRequest('http://192.168.43.146:3300/start');
+      _sendRequest('http://192.168.43.174:3333/start');
     } else {
-      _sendRequest('http://192.168.43.146:3300/stop');
+      _sendRequest('http://192.168.43.174:3333/stop');
     }
   }
 
   Future<String> checkConnectionStatus() async {
     try {
       final response =
-          await http.get(Uri.parse('http://192.168.43.146:3300/status'));
+          await http.get(Uri.parse('http://192.168.43.174:3333/status'));
       if (response.statusCode == 200) {
         return response.body;
       } else {
@@ -268,7 +274,7 @@ class _HaveDeviceScreenState extends State<HaveDeviceScreen> {
                       shadowWidth: 30,
                     ),
                   ),
-                  initialValue: 60,
+                  initialValue: 80,
                   onChange: null,
                 ),
               ),
